@@ -52,37 +52,38 @@
     }
 
     function Particle(x, y, targetX, targetY) {
-        this.sx = this.x = x || random(100, 100);
-        this.sy = this.y = y || random(150, 150);
-        this.r = 10 //random(5, 10);
-        this.targetX = targetX || random(w / 2, w / 2);
+        this.sx = this.x = x || random(100, 100);//初始化
+        this.sy = this.y = y || random(150, 150);//随机获取x y的值
+        this.r = random(5, 10);//随机获取半径
+        this.targetX = targetX || random(w / 2, w / 2);//获取终点x y 的值
         this.targetY = targetY || random(h / 2, h / 2);
-        this.spring = 0.045;
-        this.f = .98;
-        this.v = 0;
-        this.vx = 0;
-        this.vy = 0;
-        this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
-        this.dis = distance(this.targetX, this.targetY, this.sx, this.sy);
+        this.spring = 0.045;//弹性系数
+        this.f = .98;//摩擦力系数
+        this.v = 0;//合速度
+        this.vx = 0;//x轴上的速度
+        this.vy = 0;//y轴上的速度
+        this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);//初始坐标与终点坐标连成的线与x轴形成的夹角，可以将其中一点看成原点。
+        this.dis = distance(this.targetX, this.targetY, this.sx, this.sy);//两点间的距离。
     }
 
     Particle.prototype = {
-        draw: function () {
+        draw: function () {//画点
             ctx.beginPath()
             ctx.fillStyle = '#fff';
             ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
         },
-        update1: function () {
-            this.x += this.v * Math.cos(this.angle );
-            this.y += this.v * Math.sin(this.angle );
+        update1: function () {//计算每一帧x y轴方向上移动的距离，这是根据总速度的方式来计算
+            this.x += this.v * Math.cos(this.angle );//根据三角函数将合速度分解成x轴上和y轴上的速度，这里少写了一步
+            this.y += this.v * Math.sin(this.angle );//this.vy = this.v * Math.cos(this.angle );this.x+=this.vy;
+            //计算当前坐标与初始坐标的距离，因为x,y是不断变大的，所以可以得到它与总距离的值是不断变小的。所以得到一个不断衰减的变量。
             var dis = this.dis - distance(this.x, this.y, this.sx, this.sy),
-                av = dis * this.spring;
-            this.v += av;
-            this.v *= this.f;
+                av = dis * this.spring;//衰减的变量乘以弹性系数就得到加速度
+            this.v += av;//求出合速
+            this.v *= this.f;//乘以摩擦力
         },
-        update2: function () {
+        update2: function () {//这里是先分别求x y 上的速度，更简单，。
             var disX = this.targetX - this.x,
                 disY = this.targetY - this.y,
                 avX = disX * this.spring,
