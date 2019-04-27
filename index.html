@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    /*
+    渡一视频.
+    知识点: 立即执行函数,逗号运算符和括号运算符,typeof的返回值.
+    */
+    // var f = (
+    //     function a(){
+    //         return '1';
+    //     },
+    //     function b(){
+    //         return 2;
+    //     }
+    // )()hash
+    // typeof f;
+
+    // var x = 1;
+    // if(function f(){}){
+    //     x += typeof f;
+    // }
+    // console.log(x);
+    // var a = 100;
+    // var test = 0;
+    // function test() {
+    //     var b = 2 * a;
+    //     var a = 200;
+    //     var c = a / 2;
+    //     console.log(a);
+    //     alert(b);
+    //     alert(c);
+    // }
+
+
+    // console.log(test);
+
+    // window----> AO{a:undefined,
+    //             test:undefined}  ---->AO{a:undefined,
+    //                                      test:function}--->AO{a:100,
+    //                                                           test:0}
+    //在程序执行的前一刻,生成执行期上下文AO,
+
+
+    var t = true;
+
+    setTimeout((function () {
+        return function () {
+            t = false;
+        }
+    })(t), 1000);
+    setTimeout(function(){
+        alert(t);
+    },1000)
+    // while (t) {
+    //  console.log(t);  
+    // }
+    alert('end'); 
+    // if (t) {
+    //     alert('end');
+    // }
+</script>
+
+</html>

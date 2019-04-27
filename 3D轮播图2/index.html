@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D轮播图</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 800px;
+            height: 360px;
+            margin: 150px auto;
+            box-shadow: 2px 6px 25px #fd8fd9;
+            position: relative;
+        }
+
+        .box {
+            height: 100%;
+            list-style: none;
+            position: relative;
+        }
+
+        ul li {
+            height: 100%;
+            transform-style: preserve-3d;
+            position: relative;
+            float: left;
+            transform: translateZ(-180px);
+        }
+
+        ul li div {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-repeat: no-repeat;
+            background-size: 800px 100%;
+        }
+
+        ul li div:nth-child(1) {
+            top: -360px;
+            left: 0;
+            transform-origin: bottom;
+            transform: translateZ(180px) rotateX(90deg);
+            background-image: url('../3D轮播图2/img/02.jpg');
+
+        }
+
+        ul li div:nth-child(2) {
+            top: 360px;
+            left: 0;
+            transform-origin: top;
+            transform: translateZ(180px) rotateX(-90deg);
+            background-image: url('../3D轮播图2/img/03.jpg');
+        }
+
+        ul li div:nth-child(3) {
+            transform: translateZ(180px);
+            background-image: url('../3D轮播图2/img/01.jpg');
+        }
+
+        ul li div:nth-child(4) {
+            transform: translateZ(-180px) rotateX(-180deg);
+            background-image: url('../3D轮播图2/img/04.jpg');
+        }
+
+        ol {
+            width: 140px;
+            height: 20px;
+            position: absolute;
+            left: 50%;
+            margin-left: -70px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        ol li {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px white;
+            background-color: black;
+            color: white;
+            font-size: 12px;
+            font-family: 'Microsoft Yahei';
+            font-style: italic;
+            text-align: center;
+            line-height: 20px;
+            /* margin-left: 5px; */
+            float: left;
+            cursor: pointer;
+        }
+
+        ol li.on {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <ul class="box"></ul>
+        <ol>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ol>
+    </div>
+</body>
+<script>
+    /*
+    思路:将整个图片分割成n个li.每个li又包含4个div.将这4个div进行3D移动,拼成一个4面体.
+    
+    **
+    ***/
+    var box = document.getElementsByClassName('box')[0],
+        ol = document.getElementsByTagName('ol')[0],
+        css = document.getElementsByTagName('style')[0];
+    var amount = 80;
+    var allWidth = parseInt(parseInt(getComputedStyle(box, null).width) / amount);
+    var uHTML = '',
+        pHTML = '',
+        tHTML = '';
+    for (var i = 0; i < amount; i++) {
+        uHTML += '<li><div></div><div></div><div></div><div></div></li>';
+        pHTML += 'ul li:nth-child(' + (i + 1) + ') div{background-position-x:-' + i * allWidth + 'px;}';
+        tHTML += 'ul li:nth-child(' + (i + 1) + '){transition:0.8s ' + 0.3 * i / amount + 's;}';
+    }
+
+    box.innerHTML = uHTML;
+    css.innerHTML += pHTML + tHTML + '.box li{width:' + allWidth + 'px;}';
+
+    var wrapper = ol.parentElement,
+        timer = 0,
+        n = 0;
+
+    bindEvent();
+    play();
+
+    function bindEvent() {
+        btn = ol.children;
+        for (var i = 0; i < btn.length; i++) {
+            btn[i].index = i;
+        }
+        btn[0].className = 'on';
+
+        ol.addEventListener('click', function (e) {
+            var target = e.target || e.srcElement;
+            for (var i = 0; i < btn.length; i++) {
+                btn[i].className = '';
+            }
+            target.className = 'on';
+            css.innerHTML += 'ul li{transform:rotateX(' + target.index * 90 + 'deg);}';
+        });
+
+        wrapper.addEventListener('mouseover', function () {
+            clearInterval(timer);
+            // console.log('in');
+        });
+        wrapper.addEventListener('mouseout', function () {
+            play();
+        });
+    }
+
+    function play() {
+        clearInterval(timer);
+        timer = setInterval(function () {
+            n++;
+            n %= 4;
+            for (var i = 0; i < btn.length; i++) {
+                btn[i].className = '';
+            }
+            btn[n].className = 'on';
+            css.innerHTML += 'ul li{transform:rotateX(' + n * 90 + 'deg);}';
+        }, 2000)
+    }
+
+</script>
+
+</html>

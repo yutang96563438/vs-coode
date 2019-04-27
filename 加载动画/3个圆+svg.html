@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3个圆+svg</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin: 100px auto 0;
+            animation: ulMove 2s ease infinite;
+            background-color: aqua;
+        }
+
+        li {
+            width: 70px;
+            height: 70px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -35px;
+            margin-top: -35px;
+            border-radius: 50%;
+        }
+
+        li:nth-child(1) {
+            background-color: red;
+            animation: liMove1 2s ease infinite;
+        }
+
+        li:nth-child(2) {
+            background-color: green;
+            animation: liMove2 2s ease infinite;
+        }
+
+        li:nth-child(3) {
+            background-color: blue;
+            animation: liMove3 2s ease infinite;
+        }
+
+        @keyframes liMove1 {
+            20% {
+                transform: scale(1)
+            }
+
+            45% {
+                transform: translate(-16px, 12px) scale(.45)
+            }
+
+            60% {
+                transform: translate(-40px, 40px) scale(.45)
+            }
+
+            80% {
+                transform: translate(-40px, 40px) scale(.45);
+            }
+
+            100% {
+                transform: translateY(0px) scale(1);
+            }
+
+        }
+
+        @keyframes liMove2 {
+            20% {
+                transform: scale(1)
+            }
+
+            45% {
+                transform: translate(16px, 12px) scale(.45)
+            }
+
+            60% {
+                transform: translate(40px, 40px) scale(.45)
+            }
+
+            80% {
+                transform: translate(40px, 40px) scale(.45)
+            }
+
+            100% {
+                transform: translateY(0px) scale(1)
+            }
+
+        }
+
+        @keyframes liMove3 {
+            20% {
+                transform: scale(1)
+            }
+
+            45% {
+                transform: translateY(-18px) scale(.45)
+            }
+
+            60% {
+                transform: translateY(-40px) scale(.45)
+            }
+
+            80% {
+                transform: translateY(-40px) scale(.45)
+            }
+
+            100% {
+                transform: translateY(0px) scale(1)
+            }
+        }
+
+        @keyframes ulMove {
+            50% {
+                transform: rotateZ(0);
+            }
+
+            80% {
+                transform: rotateZ(360deg);
+            }
+
+            100% {
+                transform: rotateZ(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+
+</html>

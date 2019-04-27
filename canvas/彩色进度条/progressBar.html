@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>彩色进度条</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        canvas {
+            background-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth,
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+    canvas.width = w;
+    canvas.height = h;
+    window.addEventListener('resize', function () {
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth;
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+    });
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function Particle(x, y) {
+        this.w = this.h = 2;
+        this.x = x;
+        this.y = y;
+        this.vx = random(0.8, 1.8);
+        this.g = random(1, 4);
+    }
+    Particle.prototype = {
+        draw: function () {
+            ctx.beginPath();
+
+        }
+    }
+    // var P = new Particle();
+    // console.log(P);
+
+    function ProgressBar() {}
+
+    ProgressBar.prototype = {
+        init: function () {
+            this.w = 320;
+            this.h = 32;
+            this.speed = 1.1;
+            this.v = 0;
+            this.hue = 0;
+            this.variationFactor = 0.85;
+            this.bgc = 0;
+            this.timer = 0;
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillRect(500, 500, this.v, this.h);
+            ctx.closePath();
+        },
+        update: function () {
+            this.bgc = ctx.createLinearGradient(500, 500, this.w + 1, this.h);
+            this.bgc.addColorStop(0, '#333');
+            this.bgc.addColorStop(1, '#171814');
+            ctx.fillStyle = this.bgc;
+            ctx.fillRect(500, 500, this.w + 1, this.h);
+            ctx.fillStyle = 'hsla(' + this.hue + ',100%,40%,1)';
+            if (this.v >= this.w) {
+                if (this.timer == 0) {
+                    var This = this;
+                    //注意：这里要保存this的值。这里的htis代表的是ProgressBar这个对象，而在setTimeout这个函数中，this指向的是Window这个对象，所以这里要分清楚。
+                    this.timer = setTimeout(function () {
+                        This.v = 0;
+                        This.hue = 0;
+                        This.timer = 0;
+                        // console.log(this);
+                    }, 500);
+                    // console.log(this.v, this);
+                }
+
+            } else {
+                this.v += this.speed;
+                this.hue += this.variationFactor;
+            }
+        }
+    };
+
+    (function () {
+        var pro = new ProgressBar();
+        pro.init();
+
+        function draw() {
+            pro.update();
+            pro.draw();
+            requestAnimationFrame(draw);
+        }
+        draw();
+        console.log(this)
+    })();
+</script>
+
+</html>

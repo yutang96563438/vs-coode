@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>匀速运动</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            width: 500px;
+            height: 100px;
+            border: 1px solid #000;
+            position: relative;
+            margin: 100px auto;
+        }
+
+        li {
+            width: 50px;
+            height: 30px;
+            position: absolute;
+            left: 0;
+        }
+
+        li:nth-child(1) {
+            top: 0;
+            background-color: rgb(185, 32, 32);
+        }
+
+        li:nth-child(2) {
+            top: 35px;
+            background-color: rgb(19, 197, 43);
+        }
+
+        li:nth-child(3) {
+            top: 70px;
+            background-color: rgb(38, 22, 185);
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="box">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+<script>
+    var ul = document.getElementsByTagName('ul')[0],
+        li = ul.getElementsByTagName('li');
+
+    function uniformMotion(obj, target, Arrt, step) {
+        var arrt = Arrt || 'left';
+        var curPos = parseInt(getStyle(obj, arrt));
+        obj.timer = obj.timer || 0;
+        clearInterval(obj.timer);
+
+        var stepValue = 0;
+        if (curPos < target) {
+            stepValue = step || 2;
+        } else if (curPos > target) {
+            stepValue = -step || -2;
+        } else {
+            return;
+        }
+        var speed = 0;
+        obj.timer = setInterval(function () {
+            var curPos1 = parseInt(getStyle(obj, arrt));
+            speed += stepValue;
+            if (Math.abs(target - curPos1) <= Math.abs(stepValue)) {
+                clearInterval(obj.timer);
+                obj.style[arrt] = target + 'px';
+                console.log(Math.abs(speed));
+            } else {
+                obj.style[arrt] = curPos + speed + 'px';
+            }
+            console.log(curPos1);
+
+        }, 30)
+
+    }
+
+    ul.addEventListener('click', function () {
+        for (let i = 0; i < li.length; i++) {
+            uniformMotion(li[i], ul.offsetWidth - 1 - 50, 'left', (i + 1) * 2);
+            uniformMotion(li[i], ul.offsetWidth - 1 - 50, 'top', (i + 1) * 2);
+        }
+
+    })
+    li[0].addEventListener('mouseover', function () {
+        uniformMotion(this, 30, 'width');
+    })
+
+    function getStyle(obj, style) {
+        return getComputedStyle(obj, false)[style];
+    }
+</script>
+
+</html>

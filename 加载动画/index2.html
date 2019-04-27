@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>加载动画2</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        dl{
+            width: 200px;
+            height: 200px;
+            margin: 50px auto;
+            position: relative;
+            background-color: black;
+        }
+
+        dt{
+            width: 160px;
+            height: 160px;    
+            background-color: black;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -80px;
+            margin-top: -80px;
+            border-radius: 50%;
+            box-shadow: 4px 0 #51cacc;
+            animation: dtMove .5s linear infinite;
+        }
+
+        @keyframes dtMove{
+            0%{
+                transform: rotateZ(0deg);
+            }
+            50%{
+                transform: rotateZ(180deg);
+            }
+            100%{
+                transform: rotateZ(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <dl>
+        <dt></dt>
+    </dl>
+</body>
+</html>

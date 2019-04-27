@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>loading动画</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 1000px;
+            background: linear-gradient(45deg, #6Fc7b5 0%, #13bdce 20%, #0094d9 40%, #5a3694 60%, #ee4d74 80%, #f58c58 100%) no-repeat 0 0/400%;
+            overflow: hidden;
+            animation: linear-gradient-fn 7.5s infinite ease-in-out;
+        }
+
+        @keyframes linear-gradient-fn {
+            0% {
+                background-position: 0 100%;
+            }
+
+            50% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: 0 100%;
+            }
+        }
+
+        .wrapper {
+            width: 100%;
+            height: 100%;
+        }
+
+        .wrapper * {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate3d(-50%, -50%, 0) rotate(0);
+        }
+
+        .logo {
+            color: white;
+            font-weight: 500;
+            font-size: 50px;
+        }
+
+        .wrapper .dots {
+            width: 300px;
+            height: 300px;
+        }
+
+        .wrapper .dots .dot {
+            width: 300px;
+            height: 300px;
+            /* border: springgreen solid 1px; */
+        }
+
+        .wrapper .dots .dot::after {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: #ffffff;
+            content: '';
+            position: absolute;
+            transform: scale(0.2);
+        }
+
+        .wrapper .dots .dot {
+            animation: dot 7.5s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .wrapper .dots .dot::after {
+            left: 0;
+            top: 0;
+            animation: loading-dot 7.5s ease-in-out infinite;
+            transform-origin: top left;
+        }
+
+        .wrapper .dots .dot:nth-child(1) {
+            left: 210px;
+            top: 270px;
+        }
+
+        .wrapper .dots .dot:nth-child(2) {
+            left: 233px;
+            top: 300px;
+        }
+
+        .wrapper .dots .dot:nth-child(3) {
+            left: 252px;
+            top: 290px;
+        }
+
+        .wrapper .dots .dot:nth-child(4) {
+            left: 302px;
+            top: 270px;
+        }
+
+        .wrapper .dots .dot:nth-child(5) {
+            left: 354px;
+            top: 320px;
+        }
+
+
+
+        @keyframes dot {
+            0% {
+                transform: translate3d(-50%, -50%, 0) rotate(0);
+            }
+
+            50% {
+                transform: translate3d(-50%, 0) rotate(180deg);
+            }
+
+            100% {
+                transform: translate3d(-50%, -50%, 0) rotate(360deg);
+            }
+        }
+
+        @keyframes loading-dot {
+            0% {
+                transform: scale(0.2);
+            }
+
+            50% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(0.2);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="logo">loading</div>
+        <div class="dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+</body>
+<script>
+    var oDivs = document.getElementsByTagName('div')[2].children,
+        styleNode = document.getElementsByTagName('style')[0];
+    console.log(oDivs);
+    afterStr = '';
+    for (var i = 1, len = oDivs.length; i < len; i++) {
+        oDivs[i].style.setProperty('animation-delay', i * 2 + 's');
+        afterStyle = getComputedStyle(oDivs[i], ':after');//可以获取伪元素的属性,但不可以进行修改.
+        afterStr += '.wrapper .dots .dot:nth-child(' + (i + 1) + ')::after {animation-delay:' + i * 2 + 's;}';
+    }
+    styleNode.innerHTML += afterStr;
+</script>
+
+</html>

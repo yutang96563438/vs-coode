@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body {
+    width: 100%;
+    height: 700px;
+    background: linear-gradient(to left top, #f5A1D5 0%, #cdd3e9) no-repeat;
+}
+
+.wrapper {
+    position: absolute;
+    left: 30%;
+    top: 5%;
+}
+
+ul {
+    position: absolute;
+    width: 210px;
+    height: 210px;
+    transition: all .4s ease-in-out;
+    transition-delay: 0.4s;
+    left: 0;
+    top: 0;
+}
+
+.one {
+    left: 0;
+}
+
+.two {
+    left: 220px;
+}
+
+.three {
+    left: 440px;
+}
+
+li {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #ffffff;
+    padding: 5px;
+    box-shadow: 1px 1px 2px .5px #aaaaaa;
+    border-radius: 10px;
+    transition: all 0.4s ease-in-out;
+    transition-delay: 0.4s;
+}
+
+.car1{
+    top: 0;
+}
+.car2{
+    top: 220px;
+}
+.car3{
+    top: 440px;
+}
+
+.angle1 {
+    transform: rotateZ(-2deg);
+    transform-origin: center;
+}
+
+.angle2 {
+    transform: rotateZ(-7deg);
+    transform-origin: center;
+}
+
+.angle3 {
+    transform: rotateZ(5deg);
+    transform-origin: center;
+}
+
+img {
+    width: 200px;
+    height: 125px;
+}
+
+p {
+    height: 40px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 40px;
+    padding: 5px 10px;
+}
+
+/* .p{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: #0775cc;
+    transition: all 0.4s ease-in-out;
+    transition-delay: 0.4s;
+    left: 0;
+    top: 0;
+}
+.wrapper:hover .p{
+    left: 500px;
+} */

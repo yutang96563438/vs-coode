@@ -1,0 +1,114 @@
+*{
+    margin: 0;
+    padding:0;
+}
+
+body{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.wrapper{
+    width: 280px;
+    height: 400px;
+    border: 1px solid #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform-style: preserve-3d;
+    transform: rotateX(0deg) rotateY(0deg);
+    animation: Rotate 20s ease .5s  infinite none;
+}
+
+.wrapper img{
+    width: 280px;
+    height: 400px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+/* 这一步可以用js来实现. */
+/* .wrapper img:first-child{
+    transform: rotateY(0deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(2) {
+    transform: rotateY(36deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(3) {
+    transform: rotateY(72deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(4) {
+    transform: rotateY(108deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(5) {
+    transform: rotateY(144deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(6) {
+    transform: rotateY(180deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(7) {
+    transform: rotateY(216deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(8) {
+    transform: rotateY(252deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(9) {
+    transform: rotateY(288deg) translateZ(650px);
+}
+
+.wrapper img:nth-child(10) {
+    transform: rotateY(324deg) translateZ(650px);
+} */
+
+@keyframes Rotate{
+    0%{
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+    10% {
+        transform: rotateX(25deg) rotateY(36deg);
+    }
+    20% {
+        transform: rotateX(20deg) rotateY(72deg);
+    }
+    30% {
+        transform: rotateX(15deg) rotateY(108deg);
+    }
+    40% {
+        transform: rotateX(5deg) rotateY(144deg);
+    }
+    50% {
+        transform: rotateX(0deg) rotateY(180deg);
+    }
+    60%{
+        transform: rotateX(-20deg) rotateY(216deg);
+    }
+    70%{
+         transform: rotateX(-15deg) rotateY(252deg);
+    }
+    80%{
+         transform: rotateX(-10deg) rotateY(288deg);
+    }
+    90% {
+        transform: rotateX(-5deg) rotateY(324deg);
+    }
+    100%{
+         transform: rotateX(0deg) rotateY(360deg);
+    }
+}
+
+
+
+/* 将图片以3D的形式在父级上排列好,然后旋转父级.
+    注意:父级的transform-style: preserve-3d;
+    在旋转父级的时候,transform: rotate();这样是无法执行的,必须rotateX() rotateY()这样分开写.
+*/

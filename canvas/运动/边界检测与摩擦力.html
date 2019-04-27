@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas 边界检测与摩擦力</title>
+    <link rel="stylesheet" href="./canvasStyle.css">
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script src="../function.js"></script>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        windowSize = getWindowSize();
+    canvas.width = windowSize.w;
+    canvas.height = windowSize.h;
+    window.addEventListener('resize', function () {
+        windowSize = getWindowSize();
+        canvas.width = windowSize.w;
+        canvas.height = windowSize.h;
+    })
+    var canvasSize = {
+        x: 300,
+        y: 150,
+        w: 800,
+        h: 450
+    };
+
+    function init(ball, canvasSize) {
+        if (ball.x == 0) {
+            ball.sx = ball.x = ball.arguments[0] || random(canvasSize.x + ball.radius, canvasSize.x + canvasSize.w -
+                ball
+                .radius);
+        }
+        if (ball.y == 0) {
+            ball.sy = ball.y = ball.arguments[1] || random(canvasSize.y + ball.radius, canvasSize.y + canvasSize.h -
+                ball
+                .radius);
+        }
+        if (ball.radius == 20) {
+            ball.radius = ball.arguments[2] || parseInt(random(10, 20));
+        }
+        if (ball.ex == 0) {
+            ball.ex = ball.arguments[3] || random(canvasSize.x + ball.radius, canvasSize.x + canvasSize.w - ball
+                .radius);
+        }
+        if (ball.ey == 0) {
+            ball.ey = ball.arguments[4] || random(canvasSize.y + ball.radius, canvasSize.y + canvasSize.h - ball
+                .radius);
+        }
+
+        ball.vx = random(5, 10);
+        ball.vy = random(5, 10);
+        ball.angle = Math.atan2(ball.vy, ball.vx);
+        ball.speed = distance(ball.vx, ball.vy, 0, 0);
+        // console.log(ball.x, ball.y);
+    }
+
+    function bounce(ball, ctx, canvasSize) {
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+        var size = ball.getBounds();
+        if (size.x <= canvasSize.x || size.x + size.w >= canvasSize.x + canvasSize.w) {
+            ball.vx *= -1;
+        }
+        if (size.y <= canvasSize.y || size.y + size.h >= canvasSize.y + canvasSize.h) {
+            ball.vy *= -1;
+        }
+        ball.draw();
+    }
+
+    function bounce2(ball, ctx, canvasSize) {
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+        var size = ball.getBounds();
+        if (size.x <= canvasSize.x || size.x + size.w >= canvasSize.x + canvasSize.w || size.y <= canvasSize.y || size
+            .y +
+            size.h >= canvasSize.y + canvasSize.h) {
+            ball.vx *= -1;
+            ball.vy *= -1;
+        }
+        ball.draw();
+    }
+
+    function deceleratedMotion(ball, ctx, canvasSize) {
+        if (ball.speed > ball.friction) {
+            ball.speed -= ball.friction;
+        } else {
+            ball.speed = 0;
+        }
+
+        var size = ball.getBounds();
+        if (size.x <= canvasSize.x || size.x + size.w >= canvasSize.x + canvasSize.w) {
+            if (size.x <= canvasSize.x) {
+                ball.x = canvasSize.x + radius;
+            }
+            if (size.x + size.w >= canvasSize.x + canvasSize.w) {
+                ball.x = canvasSize.x + canvasSize.w - ball.radius;
+            }
+        } else {
+            ball.vx = Math.cos(ball.angle) * ball.speed;
+            ball.x += ball.vx;
+        }
+        if (size.y <= canvasSize.y || size.y + size.h >= canvasSize.y + canvasSize.h) {
+            if (size.y <= canvasSize.y) {
+                ball.y = canvasSize.y + ball.radius;
+            }
+            if (size.y + size.h >= canvasSize.y + canvasSize.h) {
+                ball.y = canvasSize.y + canvasSize.h - ball.radius;
+            }
+        } else {
+            ball.vy = Math.sin(ball.angle) * ball.speed;
+            ball.y += ball.vy
+        }
+        ball.draw();
+    }
+
+    (function () {
+        var balls = [];
+        for (var i = 0; i < 3; i++) {
+            var t = new Ball();
+            init(t, canvasSize);
+            balls.push(t);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.strokeStyle = 'red';
+            ctx.strokeRect(canvasSize.x, canvasSize.y, canvasSize.w, canvasSize.h);
+            ctx.closePath();
+            bounce(balls[0], ctx, canvasSize);
+            bounce2(balls[1], ctx, canvasSize);
+            deceleratedMotion(balls[2], ctx, canvasSize);
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })(ctx, canvasSize)
+
+    /*function bounce(ball, ctx, canvasSize) {
+        ball.vx = random(3, 5);
+        ball.vy = random(3, 5);
+        ball.sx = ball.x = canvasSize.x + ball.radius;
+        ball.sy = ball.y = canvasSize.y + ball.radius;
+        var angle = Math.atan2(ball.vy, ball.vx);
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.strokeStyle = 'red';
+            ctx.strokeRect(canvasSize.x, canvasSize.y, canvasSize.w, canvasSize.h);
+            ctx.closePath();
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+            `if (ball.x - ball.radius <= canvasSize.x || ball.y - ball.radius <= canvasSize.y || ball.x + ball.radius >=
+                canvasSize.w + canvasSize.x || ball.y + ball.radius >= canvasSize.h + canvasSize.y) {
+                ball.vy *= -1;
+                ball.vx *= -1;
+            }
+            if (ball.x - ball.radius <= canvasSize.x || ball.x + ball.radius >= canvasSize.x + canvasSize.w) {
+                ball.vx *= -1;
+            }
+            if (ball.y - ball.radius <= canvasSize.y || ball.y + ball.radius >= canvasSize.h + canvasSize.y) {
+                ball.vy *= -1;
+            }`
+
+            var size = ball.getBounds();
+            if (size.x <= canvasSize.x || size.x + size.w >= canvasSize.x + canvasSize.w) {
+                ball.vx *= -1;
+            }
+            if (size.y <= canvasSize.y || size.y + size.h >= canvasSize.y + canvasSize.h) {
+                ball.vy *= -1;
+            }
+            requestAnimationFrame(draw);
+            ball.draw();
+            console.log(ball.y,ball.x);
+        }
+        draw();
+
+    }
+    bounce(ball, ctx, canvasSize);*/
+</script>
+
+</html>

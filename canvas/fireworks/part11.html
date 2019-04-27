@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>烟花射向天空效果2</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background-color: #000;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        cw = window.innerWidth,
+        ch = window.innerHeight;
+    canvas.width = cw;
+    canvas.height = ch;
+
+    //当窗口发生改变时会执行这个函数。
+    window.onresize = function () {
+        cw = window.innerWidth;
+        ch = window.innerWidth;
+        canvas.width = cw;
+        canvas.height = ch;
+    }
+
+    // window.requestAnimFrame = (function () {
+    //     return window.requestAnimationFrame ||
+    //         window.webkitRequestAnimationFrame ||
+    //         window.mozRequestAnimationFrame ||
+    //         function (callback) {
+    //             window.setTimeout(callback, 1000 / 60);
+    //         };
+    // })();
+
+    function Particle() {}
+
+    Particle.prototype = {
+        init: function () {
+            //随机获取开始坐标和结束坐标
+            this.sx = random(0, cw);
+            this.sy = ch;
+            this.ex = random(0, cw);
+            this.ey = random(0, ch / 2);
+
+            this.x = this.sx;
+            this.y = this.sy;
+            this.coordinatesCount = Math.floor(random(3, 4));
+            this.coordinates = []; //
+            while (this.coordinatesCount--) {
+                this.coordinates.push([this.x, this.y]);
+            }
+            this.speed = 1; //斜率
+            this.accelerated = 1.05; //加速度
+            this.angle = Math.atan2(this.ey - this.sy, this.ex - this.sx); //烟花所移动的距离产生的线段与x轴的夹角
+            // this.alpha = 1; //初始的透明度
+            // this.decay = 0.95; //透明度的衰减速度
+            //随机获取颜色相关的值。
+            this.color = {
+                hue: random(100, 120),
+                brightness: random(50, 100) + '%'
+            }
+
+            this.target = calculateDistance(this.sx, this.sy, this.ex, this.ey);
+        },
+        update: function () {
+
+            this.coordinates.pop();
+            this.coordinates.unshift([this.x, this.y]);
+
+            var vx = Math.cos(this.angle) * this.speed;
+            var vy = Math.sin(this.angle) * this.speed;
+            this.speed *= this.accelerated;
+            // this.alpha *= this.decay;
+            var target = calculateDistance(this.sx, this.sy, this.x + vx, this.y + vy);
+            if (target >= this.target) {
+                this.init();
+                return -1;
+            } else {
+                this.x += vx;
+                this.y += vy;
+            }
+            console.log(this.x, this.y)
+        },
+        draw: function () {
+            var last = this.coordinates.length - 1;
+            ctx.beginPath();
+            ctx.strokeStyle = 'hsl(' + this.color.hue + ',100%,' + this.color.brightness + ')';
+            ctx.lineWidth = 2;
+            ctx.moveTo(this.coordinates[last][0], this.coordinates[last][1]);
+            ctx.lineTo(this.x, this.y);
+            ctx.stroke();
+            // console.log(this.coordinates[last][0]-this.x,this.coordinates[last][1]-this.y);//
+        }
+    }
+
+    //求2个值之间的随机数。
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    //计算两点间的距离。根据勾股定理计算。
+    function calculateDistance(p1x, p1y, p2x, p2y) {
+        return Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2));
+    }
+    // var particle = new Particle();
+    // particle.init();
+    var particles = [];
+    for (var i = 0; i < 10; i++) {
+        var t = new Particle();
+        t.init();
+        particles.push(t);
+    }
+
+    function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, cw, ch);
+        for (var i = 0, len = particles.length; i < len; i++) {
+            particles[i].draw();
+            particles[i].update();
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+</script>
+
+</html>

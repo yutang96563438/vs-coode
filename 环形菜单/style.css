@@ -1,0 +1,30 @@
+/*  */
+
+*{
+    padding: 0;
+    margin: 0;
+}
+.circle-box{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    position: relative;
+    margin: 100px auto;
+    /* left: 100px;
+    top: 100px; */
+}
+
+.circle-box span{
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-color: rgb(238, 97, 4);
+    position: absolute;
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+    /*这里不能用top,用top的话小球运动会出问题.前面用了margin-left:,后面也用 margin-top:,用来保证盒子是正方形*/
+    border-radius: 50%;
+}
+

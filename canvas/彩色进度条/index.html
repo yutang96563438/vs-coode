@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>彩色进度条</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        canvas {
+            background-color: #171418;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        sw = window.innerWidth || document.documentElement.clientWidth || body.clientWidth,
+        sh = window.innerHeight || document.documentElement.clientHeight || body.clientHeight,
+        origin = {
+            x: sw * 0.45,
+            y: sh * 0.1
+        },
+        w = 500,
+        h = 25;
+    canvas.width = sw;
+    canvas.height = sh;
+
+    window.addEventListener('resize', function () {
+        sw = window.innerWidth || document.documentElement.clientWidth || body.clientWidth;
+        sh = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+        origin = {
+            x: sw * 0.45,
+            y: sh * 0.1
+        };
+        canvas.width = sw;
+        canvas.height = sh;
+    })
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    var barWidth = 0,
+        barHue = 0;
+
+    function Particle() {}
+    Particle.prototype = {
+        init: function () {
+            this.w = this.h = random(1, 2);
+            this.x = origin.x + barWidth;
+            this.y = origin.y;
+            this.xv = random(0.8, 1.8);
+            this.g = random(1, 4);
+            this.down = false;
+            this.hue = barHue;
+            this.variationFactor = 0.3;
+            this.vg = 0.1;
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = 'hsla(' + this.hue + ',100%,50%,1)';
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.closePath();
+        },
+        update: function () {
+            if (this.down == true) {
+                this.g += this.vg;
+                this.y += this.g;
+            } else {
+                if (this.g < 0) {
+                    this.down = true;
+                    this.g += this.vg;
+                    this.y += this.g;
+                } else {
+                    this.g -= this.vg;
+                    this.y -= this.g;
+                }
+            }
+            this.x -= this.xv;
+            this.hue += this.variationFactor;
+        }
+    };
+
+    function ProgressBar() {}
+
+    ProgressBar.prototype = {
+        init: function () {
+            this.x = origin.x;
+            this.y = origin.y;
+            this.h = h;
+            this.w = 0;
+            this.vw = 2;
+            this.hue = 0;
+            this.variationFactor = 0.85;
+            this.bgc = '';
+            this.timer = 0;
+        },
+        draw: function () {
+            ctx.beginPath();
+            this.bgc = ctx.createLinearGradient(this.x, this.y, this.w, this.h);
+            this.bgc.addColorStop(0, '#333');
+            this.bgc.addColorStop(1, 'rgba(0,0,0,.5');
+            ctx.fillStyle = this.bgc;
+            ctx.fillRect(this.x, this.y, w, this.h);
+            ctx.fillStyle = 'hsla(' + this.hue + ',100%,50%,1)';
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.closePath();
+        },
+        update: function () {
+            if (this.w >= w) {
+                if (this.timer == 0) {
+                    var This = this;
+                    this.timer = setTimeout(function () {
+                        This.hue = 0;
+                        barWidth = This.w = 0;
+                        This.timer = 0;
+                    }, 1000);
+                    this.w = w;
+                    this.draw();
+                }
+            } else {
+                this.hue += this.variationFactor;
+                this.w += this.vw;
+            }
+        }
+    };
+
+    (function () {
+        var bar = new ProgressBar()
+        bar.init()
+        var count = 200,
+            ps = [],
+            n = 0;
+        barWidth = bar.w;
+        barHue = bar.hue;
+        var timer = setInterval(function () {
+            var t = new Particle();
+            t.init();
+            ps.push(t);
+            n++;
+            if (n > count) {
+                clearInterval(timer);
+            }
+        }, 10)
+
+        function draw() {
+            ctx.clearRect(0, 0, sw, sh);
+            bar.draw();
+            bar.update();
+            barWidth = bar.w;
+            barHue = bar.hue;
+            for (var i = 0; i < ps.length; i++) {
+                ps[i].draw();
+                ps[i].update();
+                if (ps[i].y >= 150) {
+                    ps.splice(i, 1);
+                    var t = new Particle();
+                    t.init();
+                    ps.push(t);
+                }
+            }
+            if (bar.w >= w) {
+                ps = [];
+                console.log(bar.w);
+            }
+            if (bar.w == 2) {
+                timer = setInterval(function () {
+                    var t = new Particle();
+                    t.init();
+                    ps.push(t);
+                    n++;
+                    if (n > count) {
+                        clearInterval(timer);
+                    }
+                }, 10)
+                console.log(ps);
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })()
+</script>
+
+</html>

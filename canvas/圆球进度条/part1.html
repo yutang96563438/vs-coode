@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>圆球进度条</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+            background-color: #000;
+            margin: 50px auto 0 auto;
+            /* border-radius: 50%; */
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName("canvas")[0],
+        ctx = canvas.getContext("2d"),
+        w = 300,
+        h = 300;
+    canvas.height = canvas.width = w;
+    //y = Asin(ωx+μ)+B
+    function CircularProgressBar(phase, amplitude, period, frequency) {
+        this.amplitude = amplitude || 30;
+        this.period = period || 2;
+        this.frequency = frequency || 1;
+        /*波长 = 宽度/周期
+          ω = 2π/波长
+          y=Asin(ωx+φ)+b中
+        周期T=2π/ω
+        波长λ=vT
+        频率=周期的倒数即f=1/T
+          */
+        this.wavelength = w + 600 / this.period;
+        this.coefficientX = (2 * Math.PI) / this.wavelength;
+        this.phase = phase / 15 || 0;
+    }
+
+    CircularProgressBar.prototype = {
+        draw: function () {
+            ctx.beginPath();
+            ctx.strokeStyle = "#fff";
+            ctx.fillStyle = "rgba(06, 85, 128, 0.5)";
+            ctx.moveTo(0 + 10, this.amplitude);
+            ctx.lineTo(0 + 10, h);
+            ctx.lineTo(w - 10, h);
+            ctx.lineTo(w - 10, this.amplitude);
+            for (x = w - 10; x >= 10; x--) {
+                var y = (this.amplitude / 2) * Math.sin((this.coefficientX / 2) * x + this.phase) + this.amplitude;
+                ctx.lineTo(x, y);
+            }
+            ctx.fill();
+            // ctx.stroke();
+            ctx.beginPath();
+        }
+    };
+
+    var phase = 0;
+
+    function draw() {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, w, h);
+        var bar = new CircularProgressBar(phase + 8 * Math.PI);
+        var bar2 = new CircularProgressBar(phase, 60);
+        bar.draw();
+        bar2.draw();
+        phase++;
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+</script>
+
+</html>

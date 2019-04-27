@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>仿苹果菜单特效</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+        }
+
+        div img {
+            width: 64px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <img src="images/1.png" alt="1">
+        <img src="images/2.png" alt="2">
+        <img src="images/3.png" alt="3">
+        <img src="images/4.png" alt="4">
+        <img src="images/5.png" alt="5">
+        <img src="images/6.png" alt="6">
+        <img src="images/7.png" alt="7">
+        <img src="images/8.png" alt="8">
+    </div>
+</body>
+
+<script>
+    var box = document.getElementsByTagName('div')[0],
+        imgs = box.getElementsByTagName('img');
+    var aWidth = [];
+    for (let i = 0; i < imgs.length; i++) {
+        aWidth.push(imgs[i].offsetWidth);
+    }
+    document.addEventListener('mousemove', function (e) {
+        var a, b, c;
+        for (let i = 0; i < imgs.length; i++) {
+            a = Math.pow(e.clientX - (imgs[i].offsetLeft + imgs[i].offsetWidth / 2), 2);
+            b = Math.pow(e.clientY - (imgs[i].offsetTop + imgs[i].offsetHeight / 2) - box.offsetTop, 2);
+            c = Math.sqrt(a + b);
+            var iScale = 1 - c / 200;
+            iScale = iScale < 0.5 ? 0.5 : iScale;
+            imgs[i].style.width = parseInt(aWidth[i] * iScale) * 2 + 'px';
+            console.log(aWidth[i] * iScale);
+        }
+        console.log(e);
+
+    })
+</script>
+
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            width: 200px;
+            height: 200px;
+            margin: 150px auto;
+            perspective: 500px;
+        }
+
+        ul {
+            width: 200px;
+            height: 200px;
+            box-sizing: border-box;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: move 4s linear 0s infinite normal;
+        }
+
+        @keyframes move {
+            from {
+                transform: rotateX(0deg);
+            }
+            to {
+                transform: rotateX(360deg);
+            }
+        }
+
+        ul li {
+            width: 200px;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            font-size: 28px;
+            list-style: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        ul li:nth-child(1) {
+            background: red;
+            transform: rotateX(90deg) translateZ(100px) scale(2, 1);
+        }
+
+        ul li:nth-child(2) {
+            background: green;
+            transform: rotateX(180deg) translateZ(100px) scale(2, 1);
+        }
+
+        ul li:nth-child(3) {
+            background: blue;
+            transform: rotateX(270deg) translateZ(100px) scale(2, 1);
+        }
+
+        ul li:nth-child(4) {
+            background: yellow;
+            transform: rotateX(360deg) translateZ(100px) scale(2, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+    </div>
+</body>
+
+</html>
+
+作者：ForeverYoung20 链接：https://www.jianshu.com/p/816734f17459 來源：简书 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

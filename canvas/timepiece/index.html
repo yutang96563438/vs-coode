@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas 时钟</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            position: absolute;
+            left: 50%;
+            top: 50px;
+            margin-left: var(--margin-left);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas height="500" width="500"></canvas>
+</body>
+
+<script>
+    var myCanvas = document.getElementsByTagName('canvas')[0];
+    // console.log(myCanvas.width);
+    // console.log(parseInt(getComputedStyle(myCanvas,null).width));
+    myCanvas.style.setProperty('--margin-left', -parseInt(getComputedStyle(myCanvas, null).width) / 2 + 'px');
+    var context = myCanvas.getContext('2d');
+    context.strokeStyle = '#00ffff';
+    context.lineWidth = 17;
+    context.shadowBlur = 15;
+    context.shadowColor = '#00ffff';
+
+    function timepiece() {
+        var date = new Date(),
+            h = date.getHours(),
+            m = date.getMinutes(),
+            s = date.getSeconds(),
+            ms = date.getMilliseconds();
+
+        var gradient = context.createRadialGradient(250, 250, 10, 250, 250, 250);
+        gradient.addColorStop(0, '#03303a');
+        gradient.addColorStop(1, '#010123');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, 500, 500);
+
+        var smil = s + ms / 1000,
+            mm = m + s / 60,
+            mh = h + mm / 60;
+
+        context.beginPath();
+        context.arc(250, 250, 140, degToRad(270), degToRad(smil * 6 - 90));
+        context.stroke();
+
+        context.beginPath();
+        context.arc(250, 250, 170, degToRad(270), degToRad(mm * 6 - 90));
+        context.stroke();
+
+        context.beginPath();
+        context.arc(250, 250, 200, degToRad(270), degToRad(mh * 30 - 90));
+        context.stroke();
+
+        h = setZero(h);
+        m = setZero(m);
+        s = setZero(s);
+
+        var str = h + ':' + m + ':' + s + ':' + ms;
+        context.font = '40px blod 微软雅黑';
+        context.fillStyle = '#00ffff';
+        context.fillText(str, 135, 250);
+        context.font = '25px blod 微软雅黑';
+        context.fillText(date.toDateString(),135,200);
+    }
+
+    function setZero(n) {
+        return n = n >= 10 ? n : '0' + n;
+    }
+
+    function degToRad(deg) {
+        return deg * Math.PI / 180;
+    }
+
+    /*将角度转换成弧度: 弧度 = 角度 * Math.PI / 180 ; */
+
+    setInterval(function () {
+        timepiece();
+    }, 1);
+
+</script>
+
+</html>

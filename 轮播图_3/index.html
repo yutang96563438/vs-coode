@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>轮播图3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        @font-face {
+            font-family: 'myfont';
+            src: url('../轮播图_3/fonts/icomoon.eot');
+            src: url('../轮播图_3/fonts/icomoon.svg') format('svg'),
+            url('../轮播图_3/fonts/icomoon.ttf') format('truetype'),
+            url('../轮播图_3/fonts/icomoon.woff') format('woff'),
+            url('../轮播图_3/fonts/icomoon.eot') format('embedded-opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .box {
+            position: relative;
+            width: 1250px;
+            height: 270px;
+            margin: 50px auto;
+            background-color: rgb(190, 124, 124);
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn1,
+        .btn2 {
+            height: 100%;
+            width: 50px;
+            position: absolute;
+            font-size: 50px;
+            color: #FFF;
+            font-family: 'myfont';
+            text-align: center;
+            line-height: 270px;
+        }
+
+        .btn1 {
+            left: -50px;
+            background-color: #B3B3B3;
+        }
+
+        .btn1::before {
+            content: '\f053';
+
+        }
+
+        .btn2 {
+            right: -50px;
+            background-color: #B3B3B3;
+        }
+
+        .btn2::before {
+            content: '\f054'
+        }
+
+        img {
+            width: 385px;
+            height: 220px;
+            margin-top: 25px;
+            position: relative;
+            float: left;
+            transition: all ease-in-out .5s;
+            /* display: none; */
+        }
+
+        .center {
+            width: 480px;
+            height: 270px;
+            margin-top: 0;
+            /* display: block;
+            left: 865px;
+            transform: translateX(-480px);
+            position: absolute; */
+            z-index: 2;
+        }
+
+        .left,
+        .right {
+            /* display: block; */
+            /* position: absolute; */
+            /* transform: translateX(-385px); */
+            z-index: 1;
+        }
+
+        /* .left{
+            left: 385px;
+        }
+        .right{
+            left: 1250px;
+        } */
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="btn1"></div>
+        <div class="btn2"></div>
+        <div class="content">
+
+            <div class="photos">
+                <img class='left' src="images/1.jpg" alt="">
+                <img class="center" src="images/2.jpg" alt="">
+                <img class="right" src="images/3.jpg" alt="">
+                <img src="images/4.jpg" alt="">
+                <img src="images/5.jpg" alt="">
+                <img src="images/6.jpg" alt="">
+                <img src="images/7.jpg" alt="">
+                <img src="images/8.jpg" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var box = document.getElementsByTagName('div')[0],
+        images = box.getElementsByTagName('img');
+    var btn1 = box.getElementsByClassName('btn1')[0],
+        btn2 = box.getElementsByClassName('btn2')[0];
+    for (let i = 0; i < images.length; i++) {
+        if (images[i].className == '') {
+            images[i].style.display = 'none';
+        }
+    }
+    var aImages = [];
+    for (let i = 0; i < images.length; i++) {
+        aImages.push(images[i]);
+    }
+    var timer = 0;
+    var i = 0;
+
+    btn1.addEventListener('click', function move1(e) {
+        var target = e.target || e.srcElement;
+
+        if (blockSuccessiveClicks(btn1, .7)) {
+
+            aImages[i + 3].style.display = 'block';
+            aImages[i + 3].style.position = 'absolute';
+            aImages[i + 3].style.left = 1250 + 'px';
+
+            timer = setTimeout(function () {
+                // aImages[0].className = 'left';
+                // aImages[1].className = 'center';
+                // aImages[2].className = 'right';
+
+                aImages[i + 0].style.position = 'absolute'
+                aImages[i + 0].style.left = 0;
+                aImages[i + 1].style.position = 'absolute'
+                aImages[i + 1].style.left = '385px';
+                aImages[i + 2].style.position = 'absolute'
+                aImages[i + 2].style.left = '865px';
+                aImages[i + 0].style.zIndex = '1';
+                aImages[i + 1].style.zIndex = '2';
+                aImages[i + 2].style.zIndex = '1';
+
+                aImages[i + 3].style.transform = 'translateX(-385px)'
+                aImages[i + 3].className = 'right';
+
+                aImages[i + 1].style.transform = 'translateX(-385px)'
+                aImages[i + 1].className = 'left';
+                aImages[i + 2].style.transform = 'translateX(-480px)'
+                aImages[i + 2].className = 'center';
+                aImages[i + 0].style.transform = 'translateX(-385px)'
+            }, 1);
+
+            setTimeout(function () {
+                aImages[i + 0].className = '';
+                aImages[i + 0].style = '';
+                aImages[i + 0].style.display = 'none';
+                var last = aImages.shift();
+                aImages.push(last);
+            }, 600)
+
+
+        } else {
+            console.log(0);
+        }
+
+
+    })
+
+    btn2.addEventListener('click', function () {
+        if (blockSuccessiveClicks(btn2, .7)) {
+
+
+            aImages[i + aImages.length - 1].style.display = 'block';
+            aImages[i + aImages.length - 1].style.position = 'absolute';
+            aImages[i + aImages.length - 1].style.left = -385 + 'px';
+
+            timer = setTimeout(function () {
+                aImages[i + 0].style.position = 'absolute'
+                aImages[i + 0].style.left = 0;
+                aImages[i + 1].style.position = 'absolute'
+                aImages[i + 1].style.left = '385px';
+                aImages[i + 2].style.position = 'absolute'
+                aImages[i + 2].style.left = '865px';
+                aImages[i + 0].style.zIndex = '1';
+                aImages[i + 1].style.zIndex = '2';
+                aImages[i + 2].style.zIndex = '1';
+
+                aImages[i + aImages.length - 1].style.transform = 'translateX(385px)'
+                aImages[i + aImages.length - 1].className = 'left';
+                aImages[i + 0].style.transform = 'translateX(385px)'
+                aImages[i + 1].style.transform = 'translateX(480px)'
+                aImages[i + 1].className = 'right';
+                aImages[i + 2].style.transform = 'translateX(385px)'
+                aImages[i + 0].className = 'center';
+            }, 1);
+
+            setTimeout(function () {
+                aImages[i + 2].className = '';
+                aImages[i + 2].style = '';
+                aImages[i + 2].style.display = 'none';
+                var first = aImages.pop();
+                aImages.unshift(first);
+
+            }, 600)
+
+
+
+        } else {
+            console.log(0);
+        }
+    })
+
+
+    function blockSuccessiveClicks(obj, time) {
+        obj.startTime = obj.startTime || new Date();
+        obj.boolean = obj.boolean || true;
+        obj.n = obj.n == null ? true : false;
+        obj.endTime = new Date();
+        obj._time = obj.endTime - obj.startTime;
+        if (parseInt(obj._time) >= parseInt(time * 1000) || obj.n) {
+            obj.startTime = obj.endTime;
+            obj.n = false;
+            return obj.boolean = true;
+        } else {
+            return obj.boolean = false;
+        }
+    }
+</script>
+
+</html>

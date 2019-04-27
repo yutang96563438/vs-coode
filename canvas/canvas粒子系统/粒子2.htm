@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+        h = canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    window.onresize = function () {
+        w = canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        h = canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    }
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function Particle() {}
+
+    Particle.prototype = {
+        init: function () {
+            this.x = random(0, w);
+            this.y = random(0, h);
+            this.ax = random(0.1, 0.9);
+            this.ay = random(0.1, 0.9);
+        },
+        updata: function () {
+            this.x += this.ax;
+            this.y += this.ay;
+            this.ax *= (this.x > w || this.x < 0) ? -1 : 1;
+            this.ay *= (this.y > h || this.y < 0) ? -1 : 1;
+            // if (this.x > w || this.x < 0) {
+            //     this.ax *= -1;
+            // }
+            // if (this.y > h || this.y < 0) {
+            //     this.ay *= -1;
+            // }
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = 'rgb(' + parseInt(random(0, 255)) + ',' + parseInt(random(0, 255)) + ',' + parseInt(random(0, 255)) +')';
+            ctx.arc(this.x, this.y, 2, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    }
+
+    function animation() {
+        var particles = [];
+        var count = 300;
+        for (var i = 0; i < count; i++) {
+            var particle = new Particle();
+            particle.init();
+            particles.push(particle);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            for (var i = 0, len = particles.length; i < len; i++) {
+                particles[i].draw();
+                particles[i].updata();
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    animation();
+</script>
+
+</html>

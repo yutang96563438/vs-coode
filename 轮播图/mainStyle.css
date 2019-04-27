@@ -1,0 +1,123 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    list-style: none;
+}
+
+.banner{
+    position: relative;
+    left: 50%;
+    top: 100px;
+    margin-left: -415px;
+    width: 830px;
+    height: 440px;
+}
+
+#mainPicture{
+    cursor: pointer;
+}
+
+#topPicture, 
+#bottomPicture{
+    right: 5px;
+    width: 150px;
+    height: 213px;
+    text-align: center;
+    background-color: rgba(255,255,255,0.3);
+    cursor: pointer;
+}
+
+#topPicture:hover,
+#bottomPicture:hover{
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: all ease 0.5s;
+}
+
+#topPicture{
+    top: 5px;
+}
+
+#bottomPicture{
+    bottom: 5px;
+}
+
+#topPicture img,
+#bottomPicture img{
+    width: 140px;
+    height: 140px;
+}
+
+#topPicture p,
+#bottomPicture p{
+    color: #333;
+}
+
+#mainPicture,
+#topPicture,
+#bottomPicture,
+.selector,
+.arrow-left,
+.arrow-right {
+    position: absolute;
+}
+
+.selector{
+    left: 50%;
+    bottom: 5%;
+    margin-left: -88px;
+}
+
+.selector li{
+    float: left;
+    text-align: center;
+    line-height: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    /* background-color: rgb(223, 114, 12); */
+    background-color: beige;
+    margin-left: 8px;
+    cursor: pointer;
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2),
+    0 7px 20px 0 rgba(0, 0, 0, .17);
+}
+
+.selector li:hover{
+    background-color: rgb(223, 114, 12);
+    transition: all ease .5s;
+}
+
+.arrow-left, .arrow-right{
+    top: 50%;
+    width: 30px;
+    height: 46px;
+    display: none;
+    cursor: pointer;
+}
+
+.arrow-left{
+    left: -1px;
+    background: url("images/index.png") no-repeat -80px -152px;
+}
+
+.arrow-right{
+    right: 0;
+    background: url("images/index.png") no-repeat -120px -152px;
+}
+
+.banner:hover .arrow-left,
+.banner:hover .arrow-right {
+    display: block;
+}
+
+.arrow-left:hover{
+     background: url("images/index.png") no-repeat -159px -152px;
+}
+
+.arrow-right:hover{
+    background: url("images/index.png") no-repeat -198px -152px;
+}
+

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>烟花随机射向天空</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    canvas {
+      background-color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas></canvas>
+</body>
+<script>
+  var canvas = document.getElementsByTagName("canvas")[0],
+    ctx = canvas.getContext("2d"),
+    W = window.innerWidth,
+    H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  window.onresize = function () {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+  };
+
+  var date = new Date();
+  console.log(date);
+
+  function Firework() {}
+
+  Firework.prototype = {
+    init: function () {
+      this.sx = random(0, W); //随机获得开始和结束的坐标
+      this.sy = H - 10;
+      this.ex = random(0, W);
+      this.ey = random(0, H / 4);
+
+      this.angle = Math.atan2(this.ey - this.sy, this.ex - this.sx); //计算线段与X轴的夹角.
+      this.speed = 10; //初始的速度
+      this.acceleration = 1.05; //加速度
+      this.target = calculateDistance(this.sx, this.sy, this.ex, this.ey); //计算两点间的长度
+      this.x = this.sx; //用于迭代使用.
+      this.y = this.sy;
+      this.color = "hsl(" + random(50, 120) + ",100%," + random(10, 100) + "%)"; //随机获取颜色
+    },
+
+    draw: function () {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, W, H);
+      ctx.beginPath();
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 2;
+      var vx = Math.cos(this.angle) * this.speed; //根据夹角和斜率计算出x轴和y轴每一次需要移动的距离.
+      var vy = Math.sin(this.angle) * this.speed;
+      this.speed *= this.acceleration; //利用加速度改变速度(也是斜率);
+      ctx.moveTo(this.x - vx * 1.2, this.y - vy * 1.2); //这个一定要有.moveTo中x,y的值减去lineTo中x,y的值一定不能为0.如果为0,就画不出线.
+      ctx.lineTo(this.x, this.y);
+      ctx.stroke();
+      var target = calculateDistance(
+        this.sx,
+        this.sy,
+        this.x + vx,
+        this.y + vy
+      ); //计算是否到达终点.
+      if (target >= this.target) {
+        console.log("OK2");
+        this.init();
+      } else {
+        this.y += vy; //迭代更新x,y的值.
+        this.x += vx;
+      }
+      // console.log(this)
+    }
+  };
+  //获取min 到 max 之间的随机数.
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  //勾股定理计算两点间的距离.
+  function calculateDistance(px1, py1, px2, py2) {
+    var a = px2 - px1;
+    var b = py2 - py1;
+    return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+  }
+
+  var firework = new Firework();
+  firework.init(); //这个要写在后面,不能写在Firework.pototype前面.
+  setInterval(function () {
+    firework.draw();
+  }, 30);
+
+  /*setInterval(firework.draw, 30);// 这里不能这样使用.这样写的话,firework.prototype中this代表的是window,而不是firework*/
+
+  // function setup() {
+  //     firework.draw();
+  //     requestAnimationFrame(setup);
+  // }
+  // setup();
+</script>
+
+</html>

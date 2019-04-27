@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>爱奇艺推广图片5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <!-- <script src="main.js"></script> -->
+</head>
+
+<body>
+    <div class="banner-box">
+
+        <ul>
+            <li>
+                <div class="expend">
+                    <div class="left">
+                        <img src="images/2-1.jpg" alt="">
+                    </div>
+                    <div class="right">
+                        <img src="images/2-2.jpg" alt="">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="expend">
+
+                    <div class="left">
+                        <img src="images/3-1.jpg" alt="">
+                    </div>
+                    <div class="right">
+                        <img src="images/3-2.jpg" alt="">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="expend">
+
+                    <div class="left">
+                        <img src="images/4-1.jpg" alt="">
+                    </div>
+                    <div class="right">
+                        <img src="images/4-2.jpg" alt="">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="expend">
+
+                    <div class="left">
+                        <img src="images/5-1.jpg" alt="">
+                    </div>
+                    <div class="right">
+                        <img src="images/5-2.jpg" alt="">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="expend">
+
+                    <div class="left">
+                        <img src="images/6-1.jpg" alt="">
+                    </div>
+                    <div class="right">
+                        <img src="images/6-2.jpg" alt="">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="expend">
+
+                    <div class="left">
+                        <img src="images/1-1.jpg" alt="">
+                    </div>
+                    <div class="right">
+                        <img src="images/1-2.jpg" alt="">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script>
+    var banner = document.getElementsByTagName('div')[0],
+        li = banner.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        li[i].addEventListener('mouseover', function () {
+            for (let index = 0; index < li.length; index++) {
+                li[index].style.width = 0;
+                li[index].style.margin = 0;
+                if (i == index) {
+                    var rightImg = li[i].getElementsByTagName('img')[1];
+                    rightImg.style.opacity = 1;
+                    li[i].style.width = '1070px';
+
+                }
+                if (i < 3) {
+                    var n = li.length - 1;
+
+                    li[n - i].style.width = '210px';
+                    li[n - i].style.marginLeft = '5px';
+
+                }
+                if (i >= 3) {
+                    li[i - 3].style.width = '210px';
+                    li[i - 3].style.marginLeft = '5px';
+                    li[i].style.marginLeft = '5px';
+
+                }
+            }
+        })
+
+        li[i].addEventListener('mouseleave', function () {
+            for (let index = 0; index < li.length; index++) {
+                li[index].style.width = 210 + 'px';
+                li[index].style.marginLeft = '5px';
+                var rightImg = li[i].getElementsByTagName('img')[1];
+                rightImg.style.opacity = 0;
+            }
+        })
+
+    }
+</script>
+
+</html>

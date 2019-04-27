@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        /* overflow-x: hidden; */
+        overflow: hidden;
+      }
+
+      canvas {
+        display: block;
+        background-color: #333;
+        margin: 30px auto 0 auto;
+      }
+
+      input {
+        display: block;
+        position: absolute;
+        left: 50%;
+        margin-left: -250px;
+        top: 0;
+        width: 500px;
+        height: 30px;
+        box-sizing: border-box;
+        padding: 5px 8px 5px 8px;
+        border: none;
+        opacity: 0.5;
+        outline: 1px rgba(255, 0, 0, 1) solid;
+      }
+    </style>
+</head>
+
+<body>
+  <canvas></canvas>
+  <canvas></canvas>
+  <input type="text" placeholder="请输入字符" />
+</body>
+<script>
+  var showCanvas = document.getElementsByTagName("canvas")[0],
+    sCtx = showCanvas.getContext("2d"),
+    pixelCanvas = document.getElementsByTagName("canvas")[1],
+    pCtx = pixelCanvas.getContext("2d"),
+    input = document.getElementsByTagName("input")[0],
+    scaleW = 25 / 100,
+    scaleH = 45 / 100,
+    w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * scaleW,
+    h = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * scaleH;
+
+  showCanvas.width = pixelCanvas.width = w;
+  showCanvas.height = pixelCanvas.height = h;
+
+  window.onresize = function () {
+    w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * scaleW;
+    h = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * scaleH;
+
+    showCanvas.width = pixelCanvas.width = w;
+    showCanvas.height = pixelCanvas.height = h;
+    if (textValue != undefined) {
+      drawText(textValue);
+    }
+    if (flag) {
+      getPixelPosition(imageData(pCtx));
+      createBalls(pixelPosition.length);
+    }
+
+
+  };
+  var textValue; //保存输入的文字
+  var flag = false;
+  var pixelPosition = []; //保存像素的位置
+  var textH = 100; //计算像素位置的时候会用到,所以要定义为公有的变量.
+  var textW = 0; //字体的宽度
+
+  function setTexttValue() {
+    input.addEventListener("keydown", function (e) {
+      if (e.which == 13) {
+        textValue = input.value = input.value.trim();
+        // flag = !flag;
+        drawText(textValue); //这个函数必须放在这里,唯有按回国键的时候才画字体.//
+      }
+      if (flag) { //flag必须要有,如果没有,不按回国键也会执行下面的代码.
+        getPixelPosition(imageData(pCtx));
+        createBalls(pixelPosition.length);
+        // flag = !flag;
+      }
+    });
+  }
+
+  function drawText(textValue) {
+    pCtx.clearRect(0, 0, w, h);
+    pCtx.fillStyle = "red";
+    textH = 128;
+    pCtx.font = textH + "px 微软雅黑";
+    pCtx.textBaseline = "top";
+    textW = pCtx.measureText(textValue).width;
+    textW = textW > w ? w : textW;
+    pCtx.fillText(textValue, (w - textW) / 2, (h - textH) / 2, w);
+    flag = !flag;
+  }
+
+  function imageData(pCtx) {
+    var imageData = pCtx.getImageData(0, 0, w, h);
+    return imageData;
+  }
+
+  function getPixelPosition(imageData) {
+    var left = 0; //(w - textW) / 8;//这里不知道为什么要从0开始.
+    var top = 0; //(h - textH) / 8;
+    for (var i = 0; i < w; i += 8) {
+      for (var j = 0; j < h; j += 8) {
+        var k = 4 * (j * w + i);
+        if (imageData.data[k] > 0) {
+          var coor = {};
+          coor.x = left + i;
+          coor.y = top + j;
+          pixelPosition.push(coor);
+        }
+      }
+    }
+  }
+
+  function createBalls(count) {
+    sCtx.clearRect(0, 0, w, h);
+    sCtx.fillStyle = "red";
+    sCtx.beginPath();
+    for (var i = 0; i < count; i++) {
+      sCtx.arc(pixelPosition[i].x, pixelPosition[i].y, 4, 0, 2 * Math.PI, false);
+      sCtx.closePath(); //这个必须要有.当然也可以将sCtx.beginPath();sCtx.fill();放到这里,只是这样会多执行两个函数.
+    }
+    sCtx.fill();
+    pixelPosition = []; //字体画完之后数组清零.
+    flag = !flag;
+  }
+
+  setTexttValue();
+</script>
+
+</html>

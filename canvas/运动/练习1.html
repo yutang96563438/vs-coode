@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas 运动练习</title>
+    <script src="../../moveAlgorithm.js"></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+        h = canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    window.addEventListener('resize', function () {
+        w = canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        h = canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    })
+
+    function canvasMove(context, obj, json, duringTime, fnType, fnEnd) {
+        if (!context) {
+            return;
+        }
+        obj.stop = obj.stop || 0;
+        obj.x = obj.x || 0;
+        obj.y = obj.y || 0;
+        obj.sTime = obj.sTime || new Date();
+        // console.log(obj.x = obj.x || 0);
+
+        (function startMove() {
+            for (let key in json) {
+                var changValue = json[key] - obj[key],
+                    curTime = new Date(),
+                    nowTime = (curTime - obj.sTime) / 1000,
+                    value = fnType(nowTime, obj[key], changValue, duringTime);
+                if (nowTime <= duringTime) {
+                    context.clearRect(0, 0, w, h);
+                    context.beginPath();
+                    if (key == 'x') {
+                        context.arc(value, obj.y, 30, 0, 2 * Math.PI, false);
+                        obj.tx = value;
+                    } else {
+                        context.arc(obj.x, value, 30, 0, 2 * Math.PI, false);
+                        obj.ty = value;
+                    }
+                    context.closePath();
+                    context.fill();
+                    console.log(context.fillStyle, value, obj[key], obj.x);
+                } else {
+                    context.clearRect(0, 0, w, h);
+                    context.beginPath();
+                    if (key == 'x') {
+                        context.arc(json[key], obj.y, 30, 0, 2 * Math.PI, false);
+                    } else {
+                        context.arc(obj.x, json[key], 30, 0, 2 * Math.PI, false);
+                    }
+                    context.fill();
+                    context.closePath();
+                    if (fnEnd) {
+                        fnEnd();
+                    }
+                    return cancelAnimationFrame(obj.stop);
+                }
+            }
+            obj.stop = requestAnimationFrame(startMove);
+        })()
+    }
+
+    ctx.fillStyle = '#fff';
+    var obj = {
+            // stop: 0,
+            // x:0,
+            // y:0
+        },
+        json = {
+            x: 1920
+        };
+    canvasMove(ctx, obj, json, 3, Math.movement.Linear);
+</script>
+
+</html>

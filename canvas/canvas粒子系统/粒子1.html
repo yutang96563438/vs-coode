@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>粒子</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth),
+        h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    window.onresize = function () {
+        w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+        h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+    }
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function calculateDistance(x1, y1, x2, y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    function getAngle(x1, y1, x2, y2) {
+        return Math.atan2((y1 - y2), (x1 - x2));
+    }
+
+    function Particle() {}
+
+    Particle.prototype = {
+        init: function (count) {
+            this.particles = [];
+            this.count = count || parseInt(random(1000, 2000));
+            this.r = 3;
+            this.x = random(2 * this.r, w - this.r * 2);
+            this.y = random(2 * this.r, h - this.r * 2);
+            this.sx = this.x;
+            this.sy = this.y;
+            this.ease = random(-1,1);
+            this.ex = random(2 * this.r, w - this.r * 2);
+            this.ey = random(2 * this.r, h - this.r * 2);
+            this.angle = getAngle(this.x, this.y, this.ex, this.ey);
+            this.dis = calculateDistance(this.x, this.y, this.ex, this.ey);
+        },
+
+        updata: function () {
+            // var dis = calculateDistance(this.sx, this.sy, this.x, this.y);
+            this.dis *= this.ease;
+            if (this.dis > 0.001) {
+                if (this.x >= this.ex) {
+                    this.x -= this.dis * Math.cos(this.angle);
+                } else {
+                    this.x += this.dis * Math.cos(this.angle);
+                }
+                if (this.y >= this.ey) {
+                    this.y -= this.dis * Math.sin(this.angle);
+                } else {
+                    this.y += this.dis * Math.sin(this.angle);
+                }
+                this.ease -= 0.0001;
+            } else {
+                this.x = this.ex;
+                this.y = this.ey;
+                this.ex = random(2 * this.r, w - this.r * 2); //this.sx; //random(2 * this.r, w - this.r * 2);
+                this.ey = random(2 * this.r, h - this.r * 2); //this.sy; //random(2 * this.r, h - this.r * 2);
+                this.sx = this.x;
+                this.sy = this.y;
+                this.angle = getAngle(this.sx, this.sy, this.ex, this.ey);
+                this.dis = calculateDistance(this.sx, this.sy, this.ex, this.ey);
+                this.ease = random(-1,1);
+            }
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = '#fff';
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+            ctx.closePath();
+            ctx.fill();
+        },
+        createParticle: function (count) {
+
+            var n = count || this.count;
+            for (var i = 0; i < n; i++) {
+                var particle = new Particle();
+                particle.init(0);
+                this.particles.push(particle);
+            }
+            var array = this.particles;
+
+            (function aniamtion() {
+                // console.log(array,this.particles);
+                ctx.clearRect(0, 0, w, h);
+                for (var i = 0; i < n; i++) {
+                    array[i].draw();
+                    array[i].updata();
+                }
+                window.requestAnimationFrame(aniamtion);
+            })();
+        }
+    }
+
+    var par = new Particle();
+    par.init(100);
+    par.createParticle();
+</script>
+
+</html>

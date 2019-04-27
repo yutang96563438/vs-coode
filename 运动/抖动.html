@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>抖动效果</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .box {
+        width: 500px;
+        height: 500px;
+        margin: auto;
+        border: 1px solid #000;
+        position: relative;
+    }
+
+    li {
+        width: 30px;
+        height: 30px;
+        background-color: rgb(129, 85, 85);
+        position: absolute;
+    }
+</style>
+
+<body>
+    <ul class="box">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+<script>
+    var oUl = document.getElementsByTagName('ul')[0];
+    var liList = oUl.getElementsByTagName('li');
+    for (let i = 0; i < liList.length; i++) {
+        var liStyle = getComputedStyle(liList[i], false);
+        liList[i].style.left = liStyle.left;
+        liList[i].style.top = i * 32 + 'px';
+    }
+
+    var target = oUl.offsetWidth - 1;
+    var arr = [10, -10, 8, -8, 6, -6, 4, -4, 2, -2, 0];
+
+   /*  function moveFrame(obj, target) {
+        obj.timer = obj.timer || null;
+        clearInterval(obj.timer);
+        var speed = 7;
+        obj.timer = setInterval(function () {
+            speed += 7;
+            obj.style.left = speed + 'px';
+            if (Math.abs(target - liList[0].offsetLeft) <= 7) {
+                clearInterval(obj.timer);
+                var currentPos = parseInt(getComputedStyle(obj, false).left);
+                var i = 0;
+                var timer = setInterval(function () {
+                    console.log(currentPos);
+                    obj.style.left = currentPos + arr[i] + 'px';
+                    if (i == arr.length - 1) {
+                        clearInterval(timer);
+                    }
+                    i++;
+
+                }, 30)
+
+                obj.style.left = target + 'px';
+                console.log(target);
+            }
+        }, 30)
+    }
+
+    liList[0].addEventListener('click', function () {
+        moveFrame(liList[0], target - 30);
+    }) */
+</script>
+
+</html>

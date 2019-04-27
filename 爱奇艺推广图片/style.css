@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.wrapper {
+    height: 100px;
+    width: 1065px;
+    margin: 0 auto;
+    text-align: center;
+    /* 设置内容居中 */
+}
+
+/* ul::after{
+    content: '';
+    display: block;
+    clear: both;
+} */
+
+ul {
+    height: 100px;
+    width: 210px;
+    border: 1px solid #000;
+    overflow: hidden;
+    display: inline-block;
+    transition:all .7s cubic-bezier(.46, .98, .54, 1.1);
+}
+
+ul li {
+    float: left;
+}
+
+/* ul li.left{
+    height:100px;
+    width:210px;
+} */
+
+ul li.right {
+    height: 0;
+    width: 0;
+}
+
+ul li.right img {
+    opacity: 0;
+    transition: opacity ease 1s;
+}
+
+.wrapper:hover li.right img {
+    opacity: 1;
+    transition: opacity ease 1s;
+}
+
+.wrapper:hover ul {
+    height: 100px;
+    width: 100%;
+    transition: all ease 1s;
+}
+
+/* 
+*
+1.进行text-align设置时,它的子级元素必须是内联元素或者内联块状元素.
+2.进行浮动的时候,如果父级的width值小于所有浮动子级的width的和,就会出现换行的情况.
+3.overflow: hidden是将超出的那部分隐藏,但是它不是存在的,依然会占据空间.
+display: none是将整个元素都隐藏掉,并且不占据空间.
+4.img属于内联块状元素,即使它的父级元素宽高都为零,它依然会显示.
+5.display是没有过渡属性的.
+
+
+遇到的问题:
+1.进行ul剧中时,没有考虑到ul是块级元素
+2.将图片进行并列的时候,即将li浮动时,总是得不到并列的效果
+**
+*/

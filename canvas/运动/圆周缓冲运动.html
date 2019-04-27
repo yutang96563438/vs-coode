@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas 圆周缓冲运动</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(rgb(190, 172, 172) 0%, rgb(163, 163, 207) 120%) no-repeat 100%;
+        }
+
+        canvas {
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth,
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+    canvas.width = w;
+    canvas.height = h;
+    var center = {
+        x: w / 2,
+        y: h / 2
+    };
+    window.addEventListener('resize', function () {
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth;
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+        center = {
+            x: w / 2,
+            y: h / 2
+        };
+    })
+
+    function distance(p1x, p1y, p2x, p2y) {
+        return Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2));
+    }
+
+    function angleToRadian(angle) {
+        return angle * Math.PI / 180;
+    }
+
+    function radianToAngle(radian) {
+        return radian * 180 / Math.PI;
+    }
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    //传入两个参数，分别是粒子的圆心坐标和粒子围绕旋转的中心的坐标。
+
+    function Particle(point, centerPoint) {
+        this.center = centerPoint || center; //表示：如果有传入中心点的坐标，则this.center 保存该坐标 ，否则就等于设定好的坐标。
+        this.r = random(5, 10); //随机取得小球的半径
+        this.easing = 0.035; //设定缓动系数
+        this.swich = 200; //设定重置边界，当this.sw大于它时，就重置。
+        this.sw = 0;
+        if (arguments[0] == null) {
+            //arguments是保存函数参数的数组。数组中的每一个元素对应着一个参数，改变元素的值，对应的参数的值也会跟着改变，arguments[0] == null就表示没有传入参数，
+            this.radius = random(50, 100);
+            this.x = this.center.x + this.radius;
+            this.y = this.center.y + this.radius;
+            this.a = this.angle = Math.atan2(this.y, this.x);
+        } else {
+            this.radius = distance(this.center.x, this.center.y, point.x + this.center.x, point.y + this.center.y);
+            this.x = this.center.x + this.radius;
+            this.y = this.center.y + this.radius;
+            this.a = this.angle = Math.atan2(point.y, point.x);
+        }
+        this.target = angleToRadian(360) + this.angle;
+    }
+    Particle.prototype = {
+        reset: function () {
+            this.angle = this.a;
+            this.x = this.center.x + this.radius;
+            this.y = this.center.y + this.radius;
+            this.easing = 0.035;
+            this.sw = 0;
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = '#333';
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+            ctx.arc(center.x, center.y, this.r, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+        },
+        update: function () {
+            //缓冲的核心：随着路程的增大，速度减小。
+            var dis = this.target - this.angle,
+                av = dis * this.easing,
+                y = this.center.y + this.radius * Math.sin(this.angle),
+                x = this.center.x + this.radius * Math.cos(this.angle);
+            this.angle += av;
+            this.x = x;
+            this.y = y;
+        }
+    };
+
+    (function () {
+        var p = new Particle({
+            x: 0,
+            y: 100
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+
+            if (radianToAngle(p.target) - radianToAngle(p.angle) < 1) {
+                p.sw += 2;
+                if (p.sw > p.swich) {
+                    p.reset();
+                } else {
+                    p.draw();
+                }
+            } else {
+                p.update();
+                p.draw();
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })()
+</script>
+
+</html>

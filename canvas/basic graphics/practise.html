@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName("canvas")[0],
+        ctx = canvas.getContext("2d"),
+        W = window.innerWidth,
+        H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    window.onresize = function () {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+    };
+    var t = 0;
+    setInterval(function () {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, W, H);
+        ctx.strokeStyle = '#fff';
+        ctx.beginPath();
+        ctx.moveTo(100 + t, 100 + t);
+        ctx.lineTo(101 + t, 101 + t);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(500 - t, 500 - t);
+        ctx.lineTo(499 - t, 499 - t);
+        ctx.stroke();
+        t++;
+    }, 10)
+    // ctx.strokeStyle='#fff';
+    // ctx.beginPath();
+    // ctx.moveTo(1,2);
+    // ctx.lineTo(30,40);
+    // ctx.stroke();
+    // ctx.beginPath();
+    // ctx.moveTo(50,100);
+    // ctx.lineTo(100,200);
+    // ctx.stroke();
+</script>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>烟花绽放的效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        W = canvas.width = window.innerWidth,
+        H = canvas.height = window.innerHeight;
+
+    window.onresize = function () {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, W, H);
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function Particle() {}
+    Particle.prototype = {
+        init: function (x, y) {
+            this.x = this.ex = x;
+            this.y = this.ey = y;
+
+            this.speed = random(1, 10);
+            this.acceleration = 0.98;
+            this.gravity = 1.2;
+            this.angle = random(0, 2 * Math.PI);
+            this.alpha = 1;
+            this.decay = random(0.005, 0.05);
+            this.coordinate = [];
+        },
+        // update: function () {
+        //     var vx = Math.cos(this.angle) * this.speed;
+        //     var vy = Math.sin(this.angle) * this.speed + this.gravity;
+        //     this.speed *= this.acceleration;
+        //     this.alpha -= this.decay;
+        //     this.x += vx;
+        //     this.y += vy;
+        // },
+
+        draw: function () {
+            ctx.strokeStyle = 'hsla(' + random(10, 120) + ' ,100%, ' + random(10, 70) + '%,' + this.alpha + ')';
+            console.log(ctx.strokeStyle);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            var vx = Math.cos(this.angle) * this.speed;
+            var vy = Math.sin(this.angle) * this.speed + this.gravity;
+            ctx.moveTo(this.x - vx * 2, this.y - vy * 2);
+            this.speed *= this.acceleration;
+            this.alpha -= this.decay;
+            this.x += vx;
+            this.y += vy;
+            ctx.lineTo(this.x, this.y);
+            ctx.stroke();
+            return this.alpha - this.decay;
+        }
+    }
+
+
+    function draw() {
+        var particle = [];
+        var x = random(10, W - 10);
+        var y = random(0, H / 2);
+        var count = 30;
+        for (var i = 0; i < count; i++) {
+            particle[i] = new Particle();
+            particle[i].init(x, y);
+        }
+
+        var _timer = setInterval(function () {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, W, H);
+            for (var i = 0, n = 0; i < count; i++) {
+                var difference = particle[i].draw();
+                if (difference < 0) {
+                    n++;
+                }
+                if (n >= 15) {
+                    clearInterval(_timer);
+                    requestAnimationFrame(draw);
+                    // draw();
+                    return;
+                    // break;
+                }
+            }
+        }, 30)
+
+    }
+    draw();
+</script>
+
+</html>

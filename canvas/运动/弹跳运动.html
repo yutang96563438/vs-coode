@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas 弹跳运动</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(#d59fda 0%, #ffddee 120%) no-repeat 100%;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script src="../function.js"></script>
+<script>
+    `2019-4-20 星期六`
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth,
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    window.addEventListener('resize', function () {
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth;
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+    })
+
+    function Particle(sx, sy, ex, ey) {
+        this.sx = this.x = sx || random(0, canvas.width);
+        this.sy = this.y = sy || random(0, canvas.height);
+        this.radius = random(10, 15);
+        this.ex = ex || random(0, canvas.width);
+        this.ey = ey || random(0, canvas.height);
+        this.down = true;
+        this.g = 1.05;
+        this.bounce = -1.25;
+        this.v = 0;
+        this.sw = 0;
+        this.count = 100;
+    }
+    Particle.prototype = {
+        reset: function () {
+            this.x = this.sx;
+            this.y = this.sy;
+            this.v = 0;
+            this.sw = 0;
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = 'red';
+            ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+            ctx.fill();
+            ctx.closePath();
+        },
+        update: function () {
+            if (this.down) {
+                if (this.y + this.radius >= this.ey) {
+                    this.down = false;
+                    this.y = this.ey - this.radius;
+                } else {
+                    this.v += this.g;
+                    this.y += this.v;
+                }
+            } else {
+                if (this.v <= 0) {
+                    if (this.y + this.radius >= this.ey) {
+                        this.sw++;
+                        this.y = this.ey - this.radius;
+                    } else {
+                        this.v = 0;
+                        this.down = true;
+                    }
+                } else {
+                    this.v += this.bounce;
+                    this.y -= this.v;
+                }
+            }
+        }
+    };
+
+    var p = new Particle(canvas.width / 2, 10, canvas.width / 2, canvas.height);
+
+    function loopAnimation() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        p.draw();
+        p.update();
+        if (p.sw >= p.count) {
+            p.reset();
+        }
+        requestAnimationFrame(loopAnimation);
+        console.log(p.y, p.v)
+    }
+    loopAnimation();
+</script>
+
+</html>

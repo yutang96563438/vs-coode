@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>字体图标</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* ul {
+            width: 170px;
+            height: 170px;
+            margin: 50px auto;
+        } */
+
+        /* li {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            font-family: 'MyIcons';
+            font-weight: 500;
+            font-size: 50px;
+            float: left;
+            background-color: rgba(0, 0, 0, 0.363);
+            margin: 5px 0 0 5px;
+        } */
+
+        /*   @font-face {
+            font-family: 'MyIcons';
+            src: url('../仿写导航栏/fonts/icomoon.eot');
+            src: url('../仿写导航栏/fonts/icomoon.eot') format('embedded-opentype'),
+            url('../仿写导航栏/fonts/icomoon.ttf') format('truetype'),
+            url('../仿写导航栏/fonts/icomoon.woff') format('woff'),
+            url('../仿写导航栏/fonts/icomoon.svg') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        } */
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="nav">
+            <nav class="search">
+                <input type="text" \>
+                <span>输入文字并回车</span>
+                <i class="close">&#xe909;</i>
+            </nav>
+            <nav class="items">
+                <span class="logo">logo
+                    <a href="#">
+                        <img src="" alt="">
+                    </a>
+                </span>
+                <ul class="menu">
+                    <li>
+                        <a href="#">
+                            <span data-hover="HomePage">主页</span>
+                        </a>
+                    </li>
+                    <li class="note">
+                        <a href="#">
+                            <span data-hover="Note">笔记</span>
+                        </a>
+                        <ul class="nav-sub-menu">
+                            <li>
+                                <a href="#">HTML && HTML5</a>
+                            </li>
+                            <li>
+                                <a href="#">CSS && CSS3</a>
+                            </li>
+                            <li>
+                                <a href="#">JavaScritp</a>
+                            </li>
+                            <li>
+                                <a href="#">jQuery</a>
+                            </li>
+                            <li>
+                                <a href="#">Java</a>
+                            </li>
+                            <li>
+                                <a href="#">JNI</a>
+                            </li>
+                            <li>
+                                <a href="#">Java Web</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="demo">
+                        <a href="#">
+                            <span data-hover="Demo">特效案例</span>
+                        </a>
+                        <ul class="nav-sub-menu">
+                            <li>
+                                <a href="#">HTML && CSS</a>
+                            </li>
+                            <li>
+                                <a href="#">HTML5 && CSS3</a>
+                            </li>
+                            <li>
+                                <a href="#">JS && jQuery</a>
+                            </li>
+                            <li>
+                                <a href="#">Canvas</a>
+                            </li>
+                            <li>
+                                <a href="#">Other</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span data-hover="Game">小游戏</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span data-hover="About Me">关于我</span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="icon">
+                    <li title="搜索">
+                        <a href="#">&#xe901;</a>
+                    </li>
+                    <li>
+                        <a href="#">&#xe903;</a>
+                    </li>
+                    <li class="wechart" title="微信">
+                        <a href="#">&#xe907;
+                            <div class="shadow">
+                                <img src="images/navweixin.jpg" alt="微信二维码">
+                            </div>
+                            <i class="triangle"></i>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="#">&#xe905;
+                            <div class="shadow">
+                                <img src="images/navzhifubao.jpg" alt="支付宝二维码">
+                            </div>
+                            <i class="triangle"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">&#xe900;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+</body>
+
+<script>
+    var nav = document.getElementsByClassName('nav')[0];
+    var search = document.getElementsByTagName('ul')[3].getElementsByTagName('li')[0];
+    var close = document.getElementsByClassName('close')[0];
+    search.addEventListener('click',function(){
+        nav.style.top = 0;
+    })
+
+    close.onclick = function(){
+        nav.style.top = -110+'px';
+    }
+</script>
+
+</html>

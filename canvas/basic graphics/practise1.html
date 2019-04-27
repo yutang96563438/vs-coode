@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>part 1</title>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
+  <script>
+    var myCanvas = document.getElementById("myCanvas");
+    var context = myCanvas.getContext("2d");
+    myCanvas.width = "500";
+    myCanvas.height = myCanvas.width;
+
+    context.fillStyle = "red";
+    context.fillRect(0, 0, 100, 150);
+    context.fillStyle = "black";
+    context.fillRect(0, 0, myCanvas.width, myCanvas.height);
+
+    context.strokeStyle = "#ffe2ab";
+    context.lineWidth = 10;
+    context.beginPath();
+    context.arc(250, 250, 100, 0, 2 * Math.PI);
+    context.stroke();
+
+    var gradien = context.createLinearGradient(0, 0, 250, 500);
+    gradien.addColorStop(0, "#15eaf2");
+    gradien.addColorStop(0.5, "#222fea");
+    gradien.addColorStop(1, "#ddfafa");
+
+    context.strokeStyle = gradien;
+    context.lineWidth = 50;
+    context.beginPath();
+    context.arc(50, 50, 25, 0, 2 * Math.PI);
+    context.stroke();
+
+    context.fillStyle = gradien;
+    // context.strokeStyle = 'black';
+    context.beginPath();
+    context.arc(200, 50, 25, 0, 2 * Math.PI);
+    context.fill();
+    context.stroke();
+
+    context.strokeStyle = 'red';
+    context.lineWidth = 5;
+    context.beginPath();
+    context.rect(250, 100, 100, 80);
+    context.arc(200, 50, 50, 0, 2 * Math.PI);
+    context.stroke();
+  </script>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>大小正方体</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .box {
+            width: 200px;
+            height: 200px;
+            margin: 300px auto;
+            position: relative;
+            perspective: 800px;
+        }
+
+        ul {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            transform-style: preserve-3d;
+            transform: translateZ(-100px) rotateY(0deg);
+            transition: 4s;
+            /* background-color: aqua; */
+        }
+
+        ul li {
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, .2);
+            position: absolute;
+            color: #aaa;
+            font-size: 40px;
+            text-align: center;
+            line-height: 200px;
+        }
+
+        ul li:nth-child(1) {
+            top: -200px;
+            left: 0;
+            transform: translateZ(100px) rotateX(90deg);
+            transform-origin: bottom;
+            transition: 2s;
+        }
+
+        ul li:nth-child(2) {
+            top: 200px;
+            left: 0;
+            transform: translateZ(100px) rotateX(-90deg);
+            transform-origin: top;
+        }
+
+        ul li:nth-child(3) {
+            top: 0;
+            left: 0;
+            transform: translateZ(100px) rotateX(0deg);
+        }
+
+        ul li:nth-child(4) {
+            top: 0px;
+            left: 0;
+            transform: translateZ(-100px) rotateX(0deg);
+        }
+
+        ul li:nth-child(5) {
+            top: 0px;
+            left: -200px;
+            transform: translateX(100px) rotateY(90deg);
+            transform-origin: center;
+        }
+
+        ul li:nth-child(6) {
+            top: 0px;
+            left: 200px;
+            transform: translateX(-100px) rotateY(-90deg);
+            transform-origin: center;
+        }
+
+        ul div {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-style: preserve-3d;
+            border: 1px solid black;
+            transition: ease 2s;
+            transform: translateZ(0) translateX(50px) translateY(50px) rotateX(0deg) rotateY(0deg);
+        }
+
+        div.small p {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            opacity: .6;
+        }
+
+        .small p:nth-child(1) {
+            top: -100px;
+            left: 0;
+            transform: translateZ(-50px) rotateX(-90deg);
+            transform-origin: bottom;
+            background: url('../大小正方体/images/1.png') no-repeat 0 0/100px 100px;
+        }
+
+        .small p:nth-child(2) {
+            top: 100px;
+            left: 0;
+            transform: translateZ(-50px) rotateX(90deg);
+            transform-origin: top;
+            background: url('../大小正方体/images/2.png') no-repeat 0 0/100px 100px;
+        }
+
+        .small p:nth-child(3) {
+            transform: translateZ(50px);
+            background: url('../大小正方体/images/3.png') no-repeat 0 0/100px 100px;
+        }
+
+        .small p:nth-child(4) {
+            transform: translateZ(-50px);
+            background: url('../大小正方体/images/4.png') no-repeat 0 0/100px 100px;
+        }
+
+        .small p:nth-child(5) {
+            top: 0;
+            left: -100px;
+            transform-origin: right;
+            transform: translateZ(50px) rotateY(-90deg);
+            background: url('../大小正方体/images/5.png') no-repeat 0 0/100px 100px;
+        }
+
+        .small p:nth-child(6) {
+            top: 0;
+            left: 100px;
+            transform-origin: left;
+            transform: translateZ(-50px) rotateY(-90deg);
+            background: url('../大小正方体/images/6.png') no-repeat 0 0/100px 100px;
+        }
+
+        .box:hover ul{
+            transform: translateZ(-100px) rotateY(360deg);
+            /* transform-origin: center; */
+        }
+
+        .box:hover li:nth-child(1) {
+            transform: translateZ(100px) rotateX(-30deg);
+        }
+
+        .box:hover div.small {
+            transform: translateZ(0) translateX(50px) translateY(-200px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <ul class="big">
+            <li>上</li>
+            <li>下</li>
+            <li>前</li>
+            <li>后</li>
+            <li>左</li>
+            <li>右</li>
+            <div class="small">
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+            </div>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>加载动画1</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+
+        /* css 中的网格布局 display: grid;*/
+        ul {
+            width: 140px;
+            margin: 50px auto;
+            border: 1px solid #bee6fd;
+            display: grid;
+            grid-template-columns: repeat(5, 20px);/*设置列数，5列宽20px的子元素*/
+            grid-template-rows: 100px;/*设置行数，为1行，高度为100px。grid-template-rows: 100px 100px；这表示2行，设置更多行可以以此类推。也可以像列数那样设置。*/
+            grid-gap: 10px;/**设置元素间的间距，为10px**/
+        }
+
+
+
+        li:nth-child(1) {
+            background-color: rgb(238, 96, 45);
+            animation: opacityChange 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        li:nth-child(2) {
+            background-color: rgb(69, 129, 185);
+            animation: opacityChange 1s cubic-bezier(0.5, 0, 0.5, 1) 0.2s infinite;
+        }
+
+        li:nth-child(3) {
+            background-color: rgb(115, 190, 159);
+            animation: opacityChange 1s cubic-bezier(0.5, 0, 0.5, 1) .4s infinite;
+        }
+
+        li:nth-child(4) {
+            background-color: rgb(123, 90, 185);
+            animation: opacityChange 1s cubic-bezier(0.5, 0, 0.5, 1) .6s infinite;
+        }
+
+        li:nth-child(5) {
+            background-color: rgb(223, 255, 80);
+            animation: opacityChange 1s cubic-bezier(0.5, 0, 0.5, 1) .8s infinite;
+        }
+
+        @keyframes opacityChange{
+            0%{
+                opacity: 1;
+            }
+            50%{
+                opacity: .5;
+            }
+            100%{
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+
+</html>

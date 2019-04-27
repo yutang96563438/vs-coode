@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>爱奇艺推广图片4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .banner-box {
+            overflow: hidden;
+            width: 840px;
+            height: 100px;
+            margin: 50px auto;
+        }
+
+        ul {
+            width: 5000px;
+            display: inline-block;
+        }
+
+        li {
+            float: left;
+            overflow: hidden;
+            width: 210px;
+            height: 100px;
+            transition: all .7s cubic-bezier(.46, .98, .54, 1.1);
+        }
+
+        .left,
+        .right {
+            float: left;
+            width: 210px;
+            /* overflow: hidden; */
+        }
+
+        li div.right {
+            width: 0;
+            height: 0;
+        }
+
+        img {
+            transition: all .7s cubic-bezier(.46, .98, .54, 1.1);
+        }
+
+        li div.right img {
+            display: block;
+            width: 855px;
+            height: 100px;
+        }
+
+        .li-hover-left {
+            width: 0;
+            margin: 0;
+            transition: all .7s cubic-bezier(.46, .98, .54, 1.1);
+        }
+
+        .li-hover-banner {
+            width: 1065px;
+            opacity: 0;
+            transition: all .7s cubic-bezier(.46, .98, .54, 1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="banner-box">
+        <ul>
+            <li>
+                <div class="left">
+                    <img src="images/2-1.jpg" alt="1-1">
+                </div>
+                <div class="right">
+                    <img src="images/2-2.jpg" alt="1-2">
+                </div>
+            </li>
+            <li>
+                <div class="left">
+                    <img src="images/1-1.jpg" alt="2-1">
+                </div>
+                <div class="right">
+                    <img src="images/1-2.jpg" alt="2-2">
+                </div>
+            </li>
+            <li>
+                <div class="left">
+                    <img src="images/3-1.jpg" alt="3-1">
+                </div>
+                <div class="right">
+                    <img src="images/3-2.jpg" alt="3-2">
+                </div>
+            </li>
+            <li>
+                <div class="left">
+                    <img src="images/4-1.jpg" alt="4-1">
+                </div>
+                <div class="right">
+                    <img src="images/4-2.jpg" alt="4-2">
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+
+<script>
+    var banner = document.getElementsByTagName('div')[0],
+        li = banner.getElementsByTagName('li'),
+        lf = banner.getElementsByClassName('left'),
+        rt = banner.getElementsByClassName('right');
+
+    for (let i = 0; i < li.length; i++) {
+        li[i].addEventListener('mouseover', function () {
+
+            for (let index = 0; index < li.length; index++) {
+                li[index].style.width = 0;
+                var right = li[i].getElementsByTagName('img')[1];
+                right.style.opacity = 0;
+            }
+            var right = li[i].getElementsByTagName('img')[1];
+            // right.style.width = 855 + 'px';
+            right.style.opacity = 1;
+            li[i].style.width = 1065 + 'px';
+        })
+
+        li[i].addEventListener('mouseout', function () {
+            for (let index = 0; index < li.length; index++) {
+                li[index].style.width = 210 + 'px';
+            }
+            var right = li[i].getElementsByTagName('img')[1];
+            right.style.opacity = 0;
+            // right.style.width = 0;
+            // li[i].style.width = 840 + 'px';
+        })
+    }
+</script>
+
+</html>

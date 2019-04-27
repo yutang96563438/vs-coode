@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>旋转木马</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            height: 280px;
+            width: 960px;
+            background-color: rgba(155, 151, 151, 0.425);
+            margin: 50px auto;
+            position: relative;
+        }
+
+        img {
+            position: absolute;
+            width: 225px;
+            height: 115px;
+            z-index: 1;
+            opacity: 1;
+            top: 82px;
+            box-sizing: border-box;
+            padding: 2px;
+            background-color: #fff;
+            text-align: center;
+            transition: all .5s ease;
+        }
+
+
+        /* img {
+             width: 225px;
+            height: 115px; 
+            display: block;
+        } */
+
+        .left,
+        .right {
+            position: absolute;
+            height: 100%;
+            width: 30px;
+            text-align: center;
+            line-height: 280px;
+            font-size: 30px;
+            display: none;
+            cursor: pointer;
+        }
+
+        .right {
+            right: 0;
+        }
+
+        ul:hover .left,
+        ul:hover .right {
+            display: block;
+            color: #fff;
+            background-color: rgb(155, 150, 150);
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="box">
+        <li>
+            <img src="images/1.jpg" alt="1">
+        </li>
+        <li>
+            <img src="images/2.jpg" alt="2">
+        </li>
+        <li>
+            <img src="images/3.jpg" alt="3">
+        </li>
+        <li>
+            <img src="images/4.jpg" alt="4">
+        </li>
+        <li>
+            <img src="images/5.jpg" alt="5">
+        </li>
+        <div class="left">&lt;</div>
+        <div class="right"> &gt;</div>
+    </ul>
+</body>
+<script src="C:\\Users\\m1312\\Desktop\\vs code\\moveAlgorithm.js"></script>
+<script>
+    var json = [{
+            'width': '225px',
+            'height': '115px',
+            'zIndex': 2,
+            'opacity': 0.8,
+            'top': ' 82px',
+            'left': '30px'
+        },
+        {
+            'width': '450px',
+            'height': '230px',
+            'zIndex': 4,
+            'opacity': 1,
+            'top': '25px',
+            'left': '255px'
+        },
+
+        {
+            'width': '225px',
+            'height': '115px',
+            'zIndex': 2,
+            'opacity': 0.8,
+            'top': ' 82px',
+            'left': '705px'
+        },
+        {
+            'width': '225px',
+            'height': '115px',
+            'zIndex': 0,
+            'opacity': 0,
+            'top': '82px',
+            'left': '364.5px'
+        },
+        {
+            'width': '225px',
+            'height': '115px',
+            'zIndex': 1,
+            'opacity': 0,
+            'top': '82px',
+            'left': '364.5px'
+        }
+    ]
+
+    var ul = document.getElementsByTagName('ul')[0],
+        li = ul.getElementsByTagName('li'),
+        img = ul.getElementsByTagName('img'),
+        div = ul.getElementsByTagName('div');
+
+    function move() {
+        for (let i = 0; i < li.length; i++) {
+            for (let key in json[i]) {
+                // li[i].style[key] = json[i][key];
+                img[i].style[key] = json[i][key];
+            }
+        }
+    }
+    move();
+
+    div[0].onclick = function () {
+        var last = json.pop();
+        json.unshift(last);
+        move();
+    }
+    div[1].onclick = function(){
+        var first = json.shift();
+        json.push(first);
+        move();
+    }
+</script>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>par1 将粒子复制</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            display: block;
+            margin: 50px auto 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas1 = document.getElementsByTagName('canvas')[0],
+        canvas2 = document.getElementsByTagName('canvas')[1],
+        ctx1 = canvas1.getContext('2d'),
+        ctx2 = canvas2.getContext('2d'),
+        H = canvas1.height = canvas2.height = 300,
+        W = canvas1.width = canvas2.width = 300;
+    ctx1.fillStyle = '#333';
+    ctx1.fillRect(0, 0, W, H);
+
+    var str = 'yutangX';
+    var textHeight = 60;
+    ctx1.font = textHeight + 'px 微软雅黑';
+    ctx1.textBaseline = 'top';
+    ctx1.fillStyle = '#ff0000';
+
+    var textWidth = ctx1.measureText(str).width;
+    if (textWidth > W) {
+        textWidth = W;
+    }
+    ctx1.fillText(str, (W - textWidth) / 2, (H - textHeight) / 2, W);
+    var imageDate = ctx1.getImageData(0, 0, W, H);
+    ctx2.putImageData(imageDate, 0, 0);
+</script>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>运动封装</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            position: relative;
+            border: 1px solid black;
+            margin: 50px auto;
+            width: 500px;
+            height: 300px;
+        }
+
+        li {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 30px;
+        }
+
+        li:nth-child(1) {
+            background-color: rgb(156, 48, 48);
+        }
+
+        li:nth-child(2) {
+            background-color: rgb(39, 189, 84);
+            top: 35px;
+        }
+
+        li:nth-child(3) {
+            background-color: blue;
+            top: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li class="li1"></li>
+        <li class="li2"></li>
+        <li class="li3"></li>
+    </ul>
+</body>
+<script src="moveAlgorithm.js"></script>
+<script>
+    var oUl = document.getElementsByTagName('ul')[0],
+        oLi = oUl.getElementsByTagName('li');
+
+
+    function move(obj, target, attr, duringTime, fnType, fnEnd) {
+        obj.timer = obj.timer || 0;
+        var startValue = parseFloat(getStyle(obj, attr)),
+            changeValue = target - startValue,
+            startTime = new Date();
+        clearInterval(obj.timer);
+        obj.timer = setInterval(function () {
+            var curTime = new Date();
+            var nowTime = (curTime - startTime) / 1000;
+            var value = fnType(nowTime, startValue, changeValue, duringTime);
+            if (nowTime <= duringTime) {
+                if (attr == 'opacity') {
+                    obj.style[attr] = value;
+                } else {
+                    obj.style[attr] = value + 'px';
+                }
+            } else {
+                clearInterval(obj.timer);
+                if (attr == 'opacity') {
+                    obj.style[attr] = target;
+                } else {
+                    obj.style[attr] = target + 'px';
+                }
+                if (fnEnd) {
+                    fnEnd();
+                }
+                // console.log(1)
+            }
+            // console.log(nowTime,[type]);
+        }, 0);
+    }
+
+    // oLi[0].addEventListener('click', function () {
+    //     move(oLi[0], 300, 'left', 1, Math.tween.Back.easeIn, function () {
+
+    //         move(oLi[0], 0.1, 'opacity', 2, Math.tween.Quad.easeIn,function(){console.log(1);});
+    //     });
+    // })
+
+    oUl.addEventListener('click', function (e) {
+        var target = e.srcElement || e.target;
+        console.log(target);
+        if (target.nodeName != 'UL') {
+            if (target.className == 'li1') {
+                move(target, 300, 'width', 3, Math.movement.Bounce.easeIn, function () {
+                    move(target, 150, 'height', 2, Math.movement.Sine.easeIn, function () {
+                        move(target, 501, 'left', 3, Math.movement.Elastic.easeOut, function () {
+                            move(target, .5, 'opacity', 1, Math.movement.Cubic.easeIn);
+                        });
+                    });
+                });
+            } else if (target.className == 'li2') {
+                move(target, 100, 'width', 3, Math.movement.Bounce.easeIn, function () {
+                    move(target, 150, 'height', 2, Math.movement.Expo.easeIn, function () {
+                        move(target, 500, 'top', 3, Math.movement.Elastic.easeOut, function () {
+                            move(target, .5, 'opacity', 1, Math.movement.Cubic.easeIn);
+                        });
+                    });
+                });
+            } else if (target.className == 'li3') {
+                move(target, 300, 'width', 1, Math.movement.Quart.easeIn, function () {
+                    move(target, 150, 'height', 2, Math.movement.Quint.easeIn, function () {
+                        move(target, -100, 'left', 3, Math.movement.Elastic.easeOut, function () {
+                            move(target, .5, 'opacity', 3, Math.movement.Circ.easeIn);
+                        });
+                    });
+                });
+            }
+        }
+    })
+</script>
+
+</html>

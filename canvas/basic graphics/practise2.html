@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>part 2</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      canvas {
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas></canvas>
+  </body>
+  <script>
+    var canvas = document.getElementsByTagName("canvas")[0],
+      ctx = canvas.getContext("2d"),
+      W = window.innerWidth,
+      H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    window.onresize = function() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    };
+
+    var r = 1,
+      vr = 1,
+      maxR = 50,
+      opacity = 1,
+      vo = 0.95;
+
+    var x = Math.floor(Math.random() * W);
+    var y = Math.floor(Math.random() * H);
+
+    function draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2, false);
+      ctx.strokeStyle = "rgba(0,255,255," + opacity + ")";
+      //   ctx.fillStyle = "rgba(0,255,255," + opacity + ")";
+      //   ctx.fill();
+      ctx.lineWidth=3;
+      ctx.stroke();
+      if (opacity > 0.01) {
+        r += vr;
+        if (r >= 50) {
+          opacity *= vo;
+        }
+      } else {
+        x = Math.floor(Math.random() * W);
+        y = Math.floor(Math.random() * H);
+        opacity = 1;
+        r = 1;
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+    // setInterval(draw, 30);
+  </script>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>彩色进度条2</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: rgb(216, 213, 213);
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            left: 40%;
+            top: 30%;
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = 500, //canva 的宽
+        h = w * 0.618, //黄金比例，设置canvas 的高
+        barWidth = 350, //进度条的总长度
+        barHeith = 20, //进度条的高度
+        origin = {
+            x: Math.floor((w - barWidth) / 2),
+            y: Math.floor(h / 2 - barHeith / 2)
+        }; //进度条的初始坐标
+
+    canvas.width = w;
+    canvas.height = h;
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function ProgressBar() {
+        this.x = origin.x;
+        this.y = origin.y;
+        this.w = 0;
+        this.h = barHeith;
+        this.hue = 0;
+        this.variationFactor = 0.8;
+    }
+
+    ProgressBar.prototype = {
+        reset: function () {
+            this.w = 0;
+            this.hue = 0;
+        },
+        draw: function () {
+            ctx.beginPath();
+            var bgc = ctx.createLinearGradient(origin.x, origin.y, barWidth, barHeith);
+            bgc.addColorStop(0, '#171814');
+            bgc.addColorStop(1, 'rgba(0,0,0,0.5)');
+            ctx.fillStyle = bgc;
+            ctx.fillRect(origin.x, origin.y, barWidth, barHeith);
+            ctx.fillStyle = 'hsla(' + this.hue + ',100%,40%,1)';
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.closePath();
+        }
+    }
+    var bar = new ProgressBar();
+
+    function Particle() {
+        this.x = origin.x + bar.w; //粒子的x轴坐标与进度条的宽度有关。
+        this.y = bar.y; //粒子的y轴初始值是不变的一直是位于进度条的最上方。
+        this.w = this.h = random(1, 2); //随机获取粒子的宽高。
+        this.hue = bar.hue; //这个用来设置颜色。因为粒子是进度条的碎屑，所以颜色跟进度条的颜色一样，所以这个参数就是进度条中的参数。
+        this.xv = random(0.8, 1.8); //随机获取x轴每次迭代的参数
+        this.g = random(1, 4); //随机获取重力加速度的初始值。
+        this.gv = 0.1; //重力加速度每次迭代的参数。
+        this.down = false; //判断粒子是否是下降。
+    }
+    Particle.prototype = {
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = 'hsla(' + this.hue + ',100%,40%,1)';
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.closePath();
+        }
+    }
+
+    var ps = [], //保存粒子的数组。
+        counter = 200, //设置粒子的总数
+        n = 0; //记录当前粒子的数量，用来判断重置粒子。
+
+    function update() {
+        for (var i = 0; i < ps.length; i++) {
+            var p = ps[i];
+            p.x -= p.xv; //因为要实现碎屑往后飘的感觉，所以这里x轴是不断减小。
+            if (p.down == true) { //判断：如果p.down == true即粒子正在往下落，那么该粒子的y值就要不断增加,所以有以下的操作。
+                p.g += p.gv;
+                p.y += p.g;
+            } else { //当p.down == false时，即粒子需要往上飘一定的高度，然后在重力的作用下再往下落。所以先要y轴的值减小。所以有两种情况。
+                if (p.g < 0) { //因为粒子的重力加速度的取值是1~4之间，所以一开始，g的值是大于0的。所以要理解p.g < 0这个条件，要先看p.g >= 0这个情况。
+                    p.down = true;
+                    p.g += p.gv;
+                    p.y += p.g;
+                } else { //p.g一开始是大于0的，y轴的值要减小，就只能不断的与p.g相减，这时就会有粒子往上飘的现象。而p.g -= p.gv则更多的是为了判断
+                    p.g -= p.gv; //什么时候粒子该往下落。所以有了p.g < 0的时候，p.down=true，这时，粒子就该往下落了。
+                    p.y -= p.g;
+                }
+            }
+            p.draw();
+        }
+        //通过循环，遍历所有粒子，遍历一个就画一个。这样的好处就是，上面的数据进行迭代时，每一次都是针对一个粒子。
+    }
+
+    //进行绘画。
+    function draw() {
+        ctx.clearRect(0, 0, w, h);//清洁画布
+        n++;//记录当前粒子的数量
+        bar.w += 2;//进度条的宽度增加，使进度条往前走
+        bar.hue += bar.variationFactor;//改变进度条的颜色
+        //下面的条件用来判断什么时候进度条重置。
+        if (bar.w > barWidth) {//当bar.w > barWidth成立，即进度条已经加载满，这时候就要重置了。
+            if (n > counter) {//这里再加一个条件用来延迟重置。当条件满足时，则重置；否则就一直是加载满状态的样子，所以有下面else语句的操作。
+                ps = [];
+                n = 0;
+                bar.reset();
+            } else {
+                bar.w = barWidth;
+                bar.draw();
+            }
+        } else {
+            bar.draw();
+            for (var i = 0; i < 2; i++) {
+                ps.push(new Particle());
+            }
+        }
+        update();
+    }
+
+    (function loop() {
+        draw();
+        requestAnimationFrame(loop);
+    })()
+</script>
+
+</html>

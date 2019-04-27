@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>movement part 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        margin: auto;
+    }
+
+    ul {
+        width: 500px;
+        height: 500px;
+        border: 1px solid #000;
+        position: relative;
+    }
+
+    li {
+        width: 30px;
+        height: 30px;
+        background-color: rgb(129, 85, 85);
+        position: absolute;
+    }
+</style>
+
+<body>
+    <ul class="box">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+<script src="../moveAlgorithm.js"></script>
+<script>
+    var oUl = document.getElementsByTagName('ul')[0];
+    var liList = oUl.getElementsByTagName('li');
+    /* for(let i = 0;i<liList.length;i++){
+     var liStyle = getComputedStyle(liList[i],false);
+     console.log(liStyle.left);
+     console.log(liStyle.top)
+    } */
+
+    for (let i = 0; i < liList.length; i++) {
+        var liStyle = getComputedStyle(liList[i], false);
+        liList[i].style.left = liStyle.left;
+        liList[i].style.top = i * 32 + 'px';
+    }
+    // var timer = setInterval(function () {
+    //     if (liList[0].offsetLeft >= oUl.offsetWidth - 32) {
+    //         clearInterval(timer);
+    //     } else {
+    //         liList[0].style.left = liList[0].offsetLeft + 2 + 'px';
+    //     }
+    // }, 10)
+    move(liList[1], {
+        // 'left': 150,
+        'top': 500
+}, 5, Math.movement.Bounce.easeInOut);
+// console.log(Math.movement);
+</script>
+
+</html>

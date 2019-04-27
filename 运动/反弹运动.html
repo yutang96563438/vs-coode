@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>反弹运动</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #728772;
+        }
+
+        .circle {
+            width: 80px;
+            height: 80px;
+            background: #80ff00 url('logo_demo1.gif') 0 0/100% no-repeat;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="circle"></div>
+</body>
+
+<script>
+    var circle = document.getElementsByClassName('circle')[0];
+
+    var screenW = document.documentElement.clientWidth,
+        screenH = document.documentElement.clientHeight;
+
+    var circleL = screenW - circle.offsetWidth,
+        circleB = screenH - circle.offsetHeight;
+
+    var timer = 0;
+
+    function bouceMovement() {
+        var leftMove = 1,
+            topMove = 2;
+        var l = parseInt(getComputedStyle(circle, null).left),
+            t = parseInt(getComputedStyle(circle, null).top);
+        timer = setInterval(function () {
+
+
+            if (circle.offsetLeft >= circleL) {
+                leftMove = -leftMove;
+                changeColor();
+            }
+            if (circle.offsetLeft <= 0) {
+                leftMove = -leftMove;
+                changeColor();
+            }
+
+            if (circle.offsetTop >= circleB) {
+                topMove = -topMove;
+                changeColor();
+            }
+            if (circle.offsetTop <= 0) {
+                topMove = -topMove;
+                changeColor();
+            }
+            circle.style.left = l + leftMove + 'px';
+            circle.style.top = t + topMove + 'px';
+
+            t += topMove;
+            l += leftMove;
+            
+        }, 8);
+    }
+
+    bouceMovement();
+    circle.addEventListener('mouseover', function () {
+        clearInterval(timer);
+    })
+
+    circle.addEventListener('mouseout', function () {
+        bouceMovement();
+    })
+
+    function changeColor() {
+        var r = parseInt(Math.random() * 225),
+            g = parseInt(Math.random() * 225),
+            b = parseInt(Math.random() * 225);
+        circle.style.backgroundColor = 'rgb('+r+','+g+','+b+')';
+        console.log('rgb('+r+','+g+','+b+')');
+    }
+</script>
+
+</html>

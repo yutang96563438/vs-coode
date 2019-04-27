@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      background-color: #333;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas></canvas>
+</body>
+<script src="../../moveAlgorithm.js"></script>
+<script>
+  var canvas = document.getElementsByTagName("canvas")[0],
+    ctx = canvas.getContext("2d"),
+    w = (canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth),
+    h = (canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight);
+  canvas.addEventListener("resize", function () {
+    w = canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    h = canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+  });
+
+  var sx = 1920 - 2 * 50 - 100,
+    sy = 100,
+    ey = 100,
+    ex = 100, //w-2*50,
+    x = sx,
+    y = sy,
+    r = 50,
+    speed = 1,
+    a1 = 1.02,
+    ball = {
+      r: 50,
+      x: x,
+      y: y,
+      dis: 0,
+      t: 0,
+      bx1: x,
+      bx: ex,
+      by: y,
+      angle: 0,
+      starTime: new Date()
+    };
+  var stop = 0;
+  (function move1() {
+    var _time = new Date();
+    var nowTime = (_time - ball.starTime) / 1000;
+    var startValue = ball.bx1;
+    var changeValue = ball.bx - ball.x;
+    var duringTime = 2;
+    var x = Math.movement.Back.easeInOut(
+      nowTime,
+      startValue,
+      changeValue,
+      duringTime
+    );
+    // ball.x = x;
+    if (nowTime >= duringTime) {
+      cancelAnimationFrame(stop);
+
+      return;
+    } else {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(x, ball.y, ball.r, 0, 2 * Math.PI, false);
+      ctx.closePath();
+      ctx.fill();
+    }
+    console.log(ball.x, x, nowTime);
+    stop = requestAnimationFrame(move1);
+  })();
+
+  function getDistance(p1x, p1y, p2x, p2y) {
+    return Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2));
+  }
+</script>
+
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>根据像素定位</title>
+    <style>
+        body {
+        margin: 0;
+        padding: 0;
+        /* overflow: scroll; */
+        overflow-x: hidden;
+      }
+      input{
+          display: block;
+          position: absolute;
+          left: 50%;
+          margin-left: -250px;
+          top: 0;
+          width: 500px;
+          height: 30px;
+          box-sizing: border-box;
+          padding: 5px 8px 5px 8px;
+          border: none;
+          opacity: .5;
+          outline: 1px rgba(255,0,0,0.2) solid;
+      }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <input type="text" placeholder="输入字符">
+</body>
+<script>
+    var canvas = document.getElementsByTagName("canvas")[0],
+        ctx = canvas.getContext("2d"),
+        iCanvas = document.createElement("canvas"),
+        ictx = iCanvas.getContext("2d"),
+        sw = (canvas.width =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.body.clientWidth),
+        sh = (canvas.height =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.body.clientHeight);
+
+    iCanvas.width = sw;
+    iCanvas.height = sh;
+    window.onresize = function () {
+        sw = canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        sh = canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        iCanvas.width = sw;
+        iCanvas.height = sh;
+        text.init();
+        text.setBallParam();
+    };
+
+    function Text() {}
+
+    Text.prototype = {
+        init: function () {
+            this.balls = [];
+            this.ballsCount = parseInt(random(1000, 2000));
+            this.textWidth;
+            this.textHeight = 150;
+            this.textValue;
+            this.pixelCoordinate = [];
+            this.backCoordinate = [];
+            this.isPlay = false;
+            this.imageData;
+            this.count = 0;
+        },
+
+        getUserText: function () {
+            var This = this;
+            var input = document.getElementsByTagName('input')[0];
+            input.addEventListener('keydown', function (e) {
+                if (e.which == 13) {
+                    This.textValue = input.value = input.value.trim();
+
+                    if (This.isPlay) {
+                        return;
+                    }
+                    This.getTextPixelPosition();
+                    This.isPlay = true;
+                    console.log(This.textValue);
+                }
+            })
+        },
+
+        getTextPixelPosition: function () {
+            ictx.clearRect(0, 0, sw, sh);
+            ictx.font = this.textHeight + 'px 微软雅黑';
+            ictx.textBaseline = 'top';
+            this.textWidth = ictx.measureText(this.textValue).width;
+            this.textWidth = this.textWidth > sw ? sw : this.textWidth;
+            ictx.fillStyle = 'red';
+            var left = (sw - this.textWidth) / 2;
+            var top = (sh - this.textHeight) / 2;
+            ictx.fillText(this.textValue, left, top, sw);
+            this.imageData = ictx.getImageData(0, 0, sw, sh).data;
+            for (var i = 0; i < sw; i += 1) {
+                for (var j = 0; j < sh; j += 1) {
+                    var k = 4 * (i + j * sw);
+                    if (this.imageData[k + 3] > 0 && this.count < this.balls.length) {
+                        this.balls[this.count].status = 1;
+                        this.balls[this.count].targetX = left + i;
+                        this.balls[this.count].targetY = top + j;
+                        this.balls[this.count].backX = this.balls[this.count].x;
+                        this.balls[this.count].backY = this.balls[this.count].y;
+
+                        this.balls[this.count].distance =
+                            this.distance(this.balls[this.count].targetX, this.balls[this.count].targetY, this.balls[
+                                this.count].backX, this.balls[this.count].backY);
+
+                        this.balls[this.count].angle =
+                            this.angle(this.balls[this.count].targetX, this.balls[
+                                this.count].targetY, this.balls[
+                                this.count].backX, this.balls[this.count].backY);
+                        this.pixelCoordinate.push(this.balls[this.count]);
+                        this.count++;
+                    }
+                }
+            }
+        },
+
+        setBallParam: function () {
+            for (var i = 0; i < this.ballsCount; i++) {
+                var ball = {};
+                ball.r = random(1, 3);
+                ball.x = random(0 + ball.r * 2, sw - ball.r * 2);
+                ball.y = random(0 + ball.r * 2, sh - ball.r * 2);
+                ball.ax = random(-1, 1);
+                ball.ay = random(-1, 1);
+
+                ball.tagetSpeedx = 5;
+                ball.tagetSpeedy = 5;
+                ball.targetX = 0;
+                ball.targetY = 0;
+                ball.backX = 0;
+                ball.backY = 0;
+                ball.status = 0;
+                ball.distance = 0;
+                ball.angle = 0;
+                this.balls.push(ball);
+            }
+        },
+        drawBalls: function (ball) {
+            ctx.beginPath();
+            ctx.fillStyle = "#fff";
+            ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI, false);
+            ctx.closePath();
+            ctx.fill();
+        },
+        ballUpdata: function (ball) {
+            if (ball.status == 0) {
+                ball.x += ball.ax;
+                ball.y += ball.ay;
+
+                if (ball.x > sw - 2 * ball.r) {
+                    ball.x = sw - 2 * ball.r;
+                    ball.ax *= -1;
+                }
+                if (ball.x <= 2 * ball.r) {
+                    ball.x = 2 * ball.r;
+                    ball.ax *= -1;
+                }
+                if (ball.y > sh - 2 * ball.r) {
+                    ball.y = sh - 2 * ball.r;
+                    ball.ay *= -1;
+                }
+                if (ball.y <= 2 * ball.r) {
+                    ball.y = 2 * ball.r;
+                    ball.ay *= -1;
+                }
+            }
+            if (ball.status == 1) {
+                var x = Math.cos(ball.angle) * ball.tagetSpeedx;
+                var y = Math.sin(ball.angle) * ball.tagetSpeedy;
+                var dis = this.distance(ball.x, ball.y, x, y);
+
+                if (ball.distance > dis) {
+                    ball.x += x;
+                    ball.y += y;
+                }
+            }
+            this.drawBalls(ball);
+        },
+        ballAnimation: function () {
+            ctx.fillStyle = "#333";
+            ctx.fillRect(0, 0, sw, sh);
+            for (var i = 0; i < this.ballsCount; i++) {
+                this.ballUpdata(this.balls[i]);
+            }
+        },
+        distance: function (x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+        },
+        angle: function (x1, y1, x2, y2) {
+            return Math.atan2(y1 - y2, x1 - x2);
+        },
+    };
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    var text = new Text();
+    text.init();
+    text.setBallParam();
+
+
+    (function animat() {
+        text.getUserText();
+        text.ballAnimation();
+        requestAnimationFrame(animat);
+    })();
+</script>
+
+</html>

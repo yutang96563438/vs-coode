@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D图片墙2</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: rgb(75, 73, 73);
+
+        }
+
+        .wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+
+            perspective: 1500px;
+        }
+
+        .box {
+            transform-style: preserve-3d;
+            transform: rotateX(-10deg) rotateY(0deg);
+            position: relative;
+            width: 200px;
+            height: 300px;
+            border: 1px solid #000;
+            margin: 50px auto;
+
+        }
+
+        img {
+            position: absolute;
+            width: 200px;
+            height: 300px;
+            /* transition: 1s; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="box">
+            <!-- <img src="../3D图片墙2/images/1.jpg" alt="">
+            <img src="../3D图片墙2/images/2.jpg" alt=""> -->
+            <img src="../3D图片墙2/images/3.jpg" alt="">
+            <img src="../3D图片墙2/images/4.jpg" alt="">
+            <img src="../3D图片墙2/images/5.jpg" alt="">
+            <img src="../3D图片墙2/images/6.jpg" alt="">
+            <img src="../3D图片墙2/images/7.jpg" alt="">
+            <img src="../3D图片墙2/images/8.jpg" alt="">
+            <img src="../3D图片墙2/images/9.jpg" alt="">
+            <img src="../3D图片墙2/images/10.jpg" alt="">
+            <img src="../3D图片墙2/images/11.jpg" alt="">
+            <img src="../3D图片墙2/images/12.jpg" alt="">
+        </div>
+    </div>
+</body>
+
+<script src="../moveAlgorithm.js"></script>
+<script>
+    var wrapper = document.getElementsByClassName('wrapper')[0],
+        box = wrapper.getElementsByTagName('div')[0],
+        images = box.getElementsByTagName('img');
+
+    function firstAnimation() {
+        var angle = parseInt(360 / images.length)
+
+        for (let i = 0; i < images.length; i++) {
+            images[i].style.transition = 1 + (images.length - i) * .2 + 's all ease';
+        }
+        var i = images.length - 1;
+        var timer = setInterval(function () {
+            images[i].style.transform = 'rotateY(' + angle * i + 'deg) translateZ(400px)';
+            i--;
+            if (i < 0) {
+                clearInterval(timer);
+            }
+        }, 100)
+    }
+
+    firstAnimation();
+
+    var newX = 0,
+        newY = 0;
+    var X, Y, x, y;
+    var rotateX = -10,rotateY = 0;
+    console.log((getStyle(box,'transform')));
+    document.addEventListener('mousedown', function (e) {
+        console.log('点击')
+        x = e.clientX;
+        y = e.clientY;
+
+
+        function mousemove1(e) {
+            newX = e.clientX;
+            newY = e.clientY;
+
+            X = newX - x;
+            Y = newY - y;
+            
+            rotateX-=Y;
+            rotateY+=X;
+
+            x = newX;
+            y = newY;
+
+            box.style.transform = 'rotateX(' + rotateX*0.2 + 'deg)' + 'rotateY(' + rotateY*.2+ 'deg)';
+            console.log('移动', x, y, newX, newY);
+        }
+        document.addEventListener('mousemove', mousemove1)
+
+        document.addEventListener('mouseup', function () {
+            document.removeEventListener('mousemove', mousemove1);
+            console.log('松开');
+        })
+    })
+</script>
+
+</html>

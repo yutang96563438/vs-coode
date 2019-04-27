@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>卷帘效果</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        body {
+            background-color: #9b9894;
+        }
+
+        ul {
+            width: 600px;
+            height: 300px;
+            position: absolute;
+            left: 50px;
+            top: 80px;
+            animation: ulMove 1s ease-in-out var(--delay) alternate infinite;
+        }
+
+        li {
+            width: var(--myWidth);
+            height: 100%;
+            position: absolute;
+            background-image: url('logo.jpg');
+            background-repeat: no-repeat;
+            background-size: var(--Width) var(--Height);
+            transform-style: preserve-3d;
+            animation: ulMove 3s ease-in-out var(--delay) alternate infinite;
+        }
+
+        @keyframes ulMove{
+            0%{
+                transform: translate3d(0,20px,0);
+            }
+            50%{
+                transform: translate3d(0,-20px,0);
+            }
+            100%{
+                transform: translate3d(0,20px,0);
+            }
+        }
+
+        @keyframes liMove{
+            0%{
+                top: 10px;
+            }
+            50%{
+                top:-10px;
+            }
+            100%{
+                top: 10px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <ul></ul>
+    </div>
+</body>
+
+<script>
+    var ul = document.getElementsByTagName('ul')[0],
+        ulWidth = parseInt(getComputedStyle(ul, null).width),
+        sum = 600,
+        liWidth = parseInt(ulWidth / sum),
+        styleNode = document.getElementsByTagName('style')[0],
+        styleStr = '';
+
+    for (var i = 0; i < sum; i++) {
+        var li = document.createElement('li');
+        ul.appendChild(li);
+        li.style.left = i*liWidth+'px';
+        li.style.backgroundPositionX = -i*liWidth+'px';
+        li.style.setProperty('--Width',ulWidth+'px');
+        li.style.setProperty('--Height',parseInt(getComputedStyle(ul,null).height)+'px');
+        li.style.setProperty('--myWidth',liWidth+'px');
+        li.style.setProperty('--delay',i*1*0.01+'s');
+    }
+
+    styleNode.innerHTML += styleStr;
+</script>
+
+</html>

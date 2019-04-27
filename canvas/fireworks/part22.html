@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>烟花爆炸效果</title>
+    <style>
+        body {
+            background: #000;
+            margin: 0;
+        }
+
+        canvas {
+            cursor: crosshair;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        // full screen dimensions
+        cw = window.innerWidth,
+        ch = window.innerHeight;
+
+
+    // window.requestAnimFrame = (function () {
+    //     return window.requestAnimationFrame ||
+    //         window.webkitRequestAnimationFrame ||
+    //         window.mozRequestAnimationFrame ||
+    //         function (callback) {
+    //             window.setTimeout(callback, 1000 / 60);
+    //         };
+    // })();
+
+    canvas.width = cw;
+    canvas.height = ch;
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function calculateDistance(p1x, p1y, p2x, p2y) {
+        var xDistance = p1x - p2x,
+            yDistance = p1y - p2y;
+        return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+    }
+
+    function Particel(x, y) {
+        this.x = x;
+        this.y = y;
+        this.coordinates = [];
+        this.coordinatesCount = 5;
+        while (this.coordinatesCount--) {
+            this.coordinates.push([this.x, this.y]);
+        }
+        this.angle = random(0, 2 * Math.PI);
+        this.speed = random(1, 10);
+        this.friction = 0.95;
+        this.gravity = 1.2;
+        this.alpha = 1;
+        this.decay = random(0.005, 0.05);
+
+        this.hue = random(100, 120);
+        this.brightness = random(50, 80);
+    }
+
+    Particel.prototype = {
+        update: function () {
+            this.coordinates.pop();
+            this.coordinates.unshift([this.x, this.y]);
+            this.speed *= this.friction;
+            this.alpha -= this.decay;
+            this.x += Math.cos(this.angle) * this.speed;
+            this.y += Math.sin(this.angle) * this.speed;
+            if (this.alpha < this.decay) {
+                return this.alpha - this.decay;
+            }
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.moveTo(this.coordinates[this.coordinates.length - 1][0], this.coordinates[this.coordinates.length - 1][1]);
+            ctx.lineTo(this.x, this.y);
+            ctx.strokeStyle = 'hsla(' + this.hue + ',100%,' + this.brightness + '%,' + this.alpha + ')';
+            ctx.stroke();
+        }
+    }
+
+    function createParticle(x, y,particleCount) {
+        var particles = [];
+        while (particleCount--) {
+            particles.push(new Particel(x, y));
+        }
+        return particles;
+    }
+    var particles = createParticle(random(100, cw + 100), random(0, ch / 2),30);
+
+
+    function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, cw, ch);
+        for (var i = 0, n = 0; i < particles.length; i++) {
+            particles[i].draw();
+           var flag = particles[i].update();
+           if(flag<= 0){
+               n++;
+           }
+           if (n>=25){
+               particles = [];
+               particles = createParticle(random(100, cw + 100), random(0, ch / 2),30);
+               break;
+           }
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+</script>
+
+</html>

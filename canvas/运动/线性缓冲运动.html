@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas线性缓冲运动</title>
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(rgb(203, 235, 219) 0%, rgb(55, 148, 192) 120%) , no-repeat 100%;
+        }
+
+        canvas {
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth,
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+    canvas.width = w;
+    canvas.height = h;
+    window.addEventListener('resize', function () {
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth;
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+        loopAnimation();
+    })
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function distance(p1x, p1y, p2x, p2y) {
+        return Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2));
+    }
+
+    function Particle() {
+        this.x = random(50, w - 50);
+        this.y = random(50, h - 50);
+        this.w = this.h = random(5, 10);
+        this.targetX = random(this.x - 30, this.x + 30);
+        this.targetY = random(this.y - 30, this.y + 30);
+        this.easing = 0.035;
+        this.distance = distance(this.x, this.y, this.targetX, this.targetY);
+    }
+    Particle.prototype = {
+        reset: function () {
+            this.x = this.targetX;
+            this.y = this.targetY;
+            this.targetX = random(this.x - 30, this.x + 30);
+            this.targetY = random(this.y - 30, this.y + 30);
+            this.distance = parseInt(distance(this.x, this.y, this.targetX, this.targetY));
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255,255,255,.5)';
+            ctx.arc(this.x, this.y, this.w / 2, 0, 2 * Math.PI, false);
+            ctx.fill();
+            ctx.closePath();
+        },
+        update: function () {
+            var disX = this.targetX - this.x,
+                disY = this.targetY - this.y,
+                avX = this.easing * disX,
+                avY = this.easing * disY;
+            this.x += avX;
+            this.y += avY;
+            this.distance = parseInt(distance(this.x, this.y, this.targetX, this.targetY));
+        }
+    };
+
+    function createP() {
+        var ps = [];
+        for (var i = 0; i < 1000; i++) {
+            ps.push(new Particle());
+        }
+        return ps;
+    }
+
+    function loopAnimation() {
+        var ps = createP();
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            for (var i = 0, len = ps.length; i < len; i++) {
+                var p = ps[i];
+                p.draw();
+                if (p.distance == 0) {
+                    p.reset();
+                }
+                p.update();
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    loopAnimation();
+
+    /*  function createP2() {
+         var ps = [],
+             counter = 200,
+             timer = setInterval(function () {
+                 ps.push(new Particle());
+                 if (!counter) {
+                     clearInterval(timer);
+                     return ps;
+                 }
+                 counter--;
+             }, 10)
+     } */
+
+    // (function () {
+    //     var ps = createP();
+
+    //     function draw() {
+    //         ctx.clearRect(0, 0, w, h);
+    //         for (var i = 0, len = ps.length; i < len; i++) {
+    //             var p = ps[i];
+    //             p.draw();
+    //             if (p.distance == 0) {
+    //                 p.reset();
+    //             }
+    //             p.update();
+    //         }
+
+    //         requestAnimationFrame(draw);
+    //     }
+    //     draw();
+    // })()
+</script>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .box div {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            position: relative;
+            text-align: center;
+            background-color: rgb(197, 169, 8);
+            left: 0;
+            top: 0;
+        }
+
+        div.box {
+            width: 200px;
+            margin: 100px auto;
+            position: relative;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div>上下</div>
+        <div>左右</div>
+    </div>
+
+</body>
+<script>
+    var box = document.getElementsByTagName('div')[0],
+        div = box.children;
+
+    function shakeMove(json, fnEnd) {
+
+        var obj = json.obj;
+        // var fnEnd = json.fnEnd;
+        var target = json.target;
+        target = Number(target) || 20;
+        var attr = json.attr;
+        attr = attr || 'left';
+        var dir = json.dir;
+        dir = Number(dir) || 1;
+        var stepValue = json.stepValue;
+        stepValue = Number(stepValue) || 2;
+        var step = 0;
+        var value = null;
+        var attrValue = parseInt(getStyle(obj, attr));
+        if (obj.timer) {
+            // console.log(obj.timer);
+            return;
+        }
+
+
+        obj.timer = setInterval(function () {
+            value = dir * (target - step);
+            obj.style[attr] = attrValue + value + 'px';
+            if (target <= step) {
+                clearInterval(obj.timer);
+                obj.style[attr] = attrValue + 'px';
+                obj.timer = 0;
+                if (fnEnd) {
+                    fnEnd();
+                    console.log(1)
+                }
+            }
+            if (dir == -1) {
+                step += stepValue;
+            }
+            // console.log(step, obj.timer ,target);
+            dir = -dir;
+        }, 50)
+    }
+
+    div[0].addEventListener('mouseover', function () {
+        shakeMove({
+            obj: div[0],
+            /* target: 20,
+            stepValue: 2, */
+
+        }, function () {
+            shakeMove({
+                obj: div[0],
+                target: 20,
+                stepValue: 2,
+                attr: 'top'
+            })
+        });
+
+    });
+
+    div[1].addEventListener('mouseover', function () {
+        shakeMove({
+            obj: div[1],
+            target: 20,
+            stepValue: 3,
+            attr: 'top'
+        });
+
+    })
+    div[1].addEventListener('mouseleave', function () {
+        console.log('leave')
+    })
+
+    function getStyle(obj, style) {
+        return getComputedStyle(obj, false)[style];
+    }
+</script>
+
+</html>

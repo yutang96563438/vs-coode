@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数字时钟</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .wrapper {
+            position: relative;
+            width: 1200px;
+            height: 210px;
+            overflow: hidden;
+            margin: 50px auto;
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        li {
+            width: 150px;
+            height: 210px;
+            float: left;
+            position: relative;
+        }
+
+        li div {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <ul class="content">
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/0.png" alt="">
+                    <img src="../数字时钟/img/0.png" alt="">
+                </div>
+            </li>
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/0.png" alt="">
+                    <img src="../数字时钟/img/0.png" alt="">
+                </div>
+            </li>
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/fuh.png" alt="">
+                    <!-- <img src="../数字时钟/img/0.png" alt=""> -->
+                </div>
+            </li>
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/0.png" alt="">
+                    <img src="../数字时钟/img/0.png" alt="">
+                </div>
+            </li>
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/0.png" alt="">
+                    <img src="../数字时钟/img/0.png" alt="">
+                </div>
+            </li>
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/fuh.png" alt="">
+                    <!-- <img src="../数字时钟/img/0.png" alt=""> -->
+                </div>
+            </li>
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/0.png" alt="">
+                    <img src="../数字时钟/img/0.png" alt="">
+                </div>
+            </li>
+            <li>
+                <div class="box">
+                    <img src="../数字时钟/img/0.png" alt="">
+                    <img src="../数字时钟/img/0.png" alt="">
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</body>
+
+<script src="../数字时钟/moveAlgorithm.js"></script>
+<script>
+    var ul = document.getElementsByTagName('ul')[0],
+        ali = ul.children,
+        abox = (function () {
+            var box = [];
+            for (i = 0, len = ali.length; i < len; i++) {
+                box.push(ali[i].getElementsByTagName('div')[0]);
+            }
+            return box;
+        })();
+
+    // console.log(getTimes().charAt(2));
+    //获取当前系统的时间.
+    function getTimes() {
+        var date = new Date(),
+            h = date.getHours(),
+            m = date.getMinutes(),
+            s = date.getSeconds();
+        return getZero(h) + ':' + getZero(m) + ':' + getZero(s);
+    }
+    //当获得的时间小于10时,自动在前面补个0.使时间显示是8个.
+    function getZero(n) {
+        return n = n < 10 ? '0' + n : n;
+    }
+    // 设置时间.
+    function setTimes(newTime, oldTime) {
+        for (var i = 0, len = abox.length; i < len; i++) {
+            let j = i;
+            if (i == 2 || i == 5) {
+                abox[i].children[0].src = '../数字时钟/img/fuh.png';
+            } else {
+                //新的时间与旧的时间比较,字符串中哪个位置的数改变了,就改变相对应的位置上的图片.
+                if (oldTime.charAt(i) != newTime.charAt(i)) {
+                    abox[i].children[1].src = '../数字时钟/img/' + newTime.charAt(i) + '.png';
+                    //每个数字都对应着一张图片.数字就是图片名.
+                    //move()是自己写的运动函数.function(){}这个参数里,会形成闭包.i的值会是8.
+                    //这里是用es6的方法解决闭包的问题.let j = i;这样j就可以在function(){}里面用了.
+                    //运动:box中有2张图片A,B.首先让B(隐藏的)图片改变成与当前时间对应的图片,接着移动box(缓动),之//后将A(显示的)图片也变为B相同的图片,最后将box归位(这个过程瞬间完成).
+                    move(abox[i], {'top': -210}, 0.5, Math.movement.Linear, function () {
+                        abox[j].style.top = 0;
+                        abox[j].children[0].src = '../数字时钟/img/' + newTime.charAt(j) + '.png';
+                    });
+                }
+            }
+        }
+
+    }
+
+    function clock() {
+        var newTime = getTimes(),
+            oldTime = '';
+        setTimes(newTime,oldTime);//这一步相当于初始化.
+        setInterval(function () {
+            oldTime = newTime;
+            newTime = getTimes();
+            setTimes(newTime,oldTime);
+        }, 1000);
+    }
+
+    clock();
+</script>
+
+</html>

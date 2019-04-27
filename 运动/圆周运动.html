@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>圆周运动</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 500px;
+            height: 500px;
+            border: 1px solid #000;
+            margin: 50px auto;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .box div {
+            width: 50px;
+            height: 50px;
+            background-color: rgb(233, 199, 88);
+            position: absolute;
+            border-radius: 50%;
+            left: 50%;
+            margin-left: -25px;
+            margin-top: -25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div></div>
+    </div>
+</body>
+<script>
+    var box = document.getElementsByTagName('div')[0],
+        div = box.children[0];
+
+    var R = box.offsetWidth / 2;
+
+    function getStyle(obj, attr) {
+        return getComputedStyle(obj, true)[attr];
+    }
+
+    function getPointOfCircle(r, angle) {
+        var point = new Object;
+        point.x = r + r * Math.sin(angle * Math.PI / 180);
+        point.y = r + r * Math.cos(angle * Math.PI / 180);
+
+        return point;
+    }
+
+    function circleMovement(obj, targetAngle) {
+        clearInterval(obj.timer);
+        obj.startAngle = obj.startAngle || 0;
+        var startAngle = obj.startAngle;
+        var speed = null;
+        var curAngle = startAngle;
+        var lenAngle = targetAngle - startAngle;
+        obj.timer = setInterval(function () {
+            speed = (lenAngle - curAngle)/12;
+
+            curAngle += speed;
+            var point = getPointOfCircle(R, curAngle);
+            if (Math.round(curAngle) >= targetAngle) {
+                clearInterval(obj.timer);
+                point = getPointOfCircle(R, targetAngle);
+                obj.style.left = point.x + 'px';
+                obj.style.top = point.y + 'px';
+            } else {
+                obj.style.left = point.x + 'px';
+                obj.style.top = point.y + 'px';
+            }
+            console.log(point,curAngle);
+        }, 30)
+    }
+
+    box.addEventListener('click',function(){
+        circleMovement(div,360);
+    })
+</script>
+
+</html>

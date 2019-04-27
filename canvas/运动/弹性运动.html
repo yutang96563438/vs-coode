@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas 弹性运动</title>
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(rgb(199, 190, 194) 0%, rgb(146, 146, 223) 150%) no-repeat 100%;
+        }
+
+        canvas {
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth,
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    window.addEventListener('resize', function () {
+        w = window.innerWidth || document.documentElement.clientWidth || body.clientWidth;
+        h = window.innerHeight || document.documentElement.clientHeight || body.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+    })
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function distance(p1x, p1y, p2x, p2y) {
+        return Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2));
+    }
+
+    function Particle(x, y, targetX, targetY) {
+        this.sx = this.x = x || random(100, 100);
+        this.sy = this.y = y || random(150, 150);
+        this.r = 10 //random(5, 10);
+        this.targetX = targetX || random(w / 2, w / 2);
+        this.targetY = targetY || random(h / 2, h / 2);
+        this.spring = 0.045;
+        this.f = .98;
+        this.v = 0;
+        this.vx = 0;
+        this.vy = 0;
+        this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+        this.dis = distance(this.targetX, this.targetY, this.sx, this.sy);
+    }
+
+    Particle.prototype = {
+        draw: function () {
+            ctx.beginPath()
+            ctx.fillStyle = '#fff';
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+            ctx.fill();
+            ctx.closePath();
+        },
+        update1: function () {
+            this.x += this.v * Math.cos(this.angle );
+            this.y += this.v * Math.sin(this.angle );
+            var dis = this.dis - distance(this.x, this.y, this.sx, this.sy),
+                av = dis * this.spring;
+            this.v += av;
+            this.v *= this.f;
+        },
+        update2: function () {
+            var disX = this.targetX - this.x,
+                disY = this.targetY - this.y,
+                avX = disX * this.spring,
+                avY = disY * this.spring;
+            this.vx += avX;
+            this.vy += avY;
+            this.vx *= this.f;
+            this.vy *= this.f;
+            this.x += this.vx;
+            this.y += this.vy;
+            // this.x+=avX;
+            // this.y+=avY;
+        }
+    }
+
+    var p = new Particle(100, 10, 500, 50);
+    var p2 = new Particle(100, 110, 500, 150);
+    p.r = p2.r;
+
+
+
+    // console.log(Math.atan2(p.y, p.x) * 180 / Math.PI, Math.atan2(p2.y, p2.x) * 180 / Math.PI, p.angle * 180 / Math.PI)
+
+    // console.log(p2.dis * Math.cos(p2.angle), p2.dis);
+
+
+    function loopAnimation() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.beginPath();
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 3;
+        ctx.moveTo(100, 10);
+        ctx.lineTo(p.x, p.y);
+        ctx.moveTo(100,110);
+        ctx.lineTo(p2.x,p2.y);
+        ctx.stroke()
+        p.draw();
+        p.update1();
+        p2.draw();
+        p2.update2();
+        requestAnimationFrame(loopAnimation);
+        // console.log(p.x, p.y, p2.x, p2.y);
+    }
+    loopAnimation();
+</script>
+
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            width: 100%;
+            height: 500px;
+            margin: 10px auto;
+            background-color: rgba(150, 200, 50, .5);
+            overflow: hidden;
+        }
+
+        ul li:nth-child(1) {
+            width: 50%;
+            height: 150px;
+            background-color: #333333;
+            margin: 20px auto;
+        }
+
+        div {
+            width: 50%;
+            height: 100px;
+            background-color: brown;
+            /* margin: 20px auto; */
+            position: relative;
+            /* top:0; */
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="wrapper">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <div></div>
+</body>
+<script src="tween.js"></script>
+<script src="animation.js"></script>
+<script>
+    var a = 5;
+    var b = '5';
+    // alert(b + a);
+    /*  var json = {
+         c: 5,
+         d: 4,
+         e: 3,
+         f: 2
+     };
+     for (var key in json) {
+         alert(json[key]);
+     } */
+
+    var odiv = document.getElementsByTagName('div')[0];
+
+    function getStyle(obj, attr) {
+        return getComputedStyle(obj, null)[attr];
+    }
+
+    function move(obj, target, attr, endTime, fnEnd) {
+        obj.timer = obj.timer || 0;
+        clearInterval(obj.timer);
+        var startPos = parseInt(getStyle(obj, attr));
+        var startTime = new Date();
+        var currentTime = 0;
+        var duringTime = endTime;
+        var change = target - startPos;
+
+        obj.timer = setInterval(function () {
+            currentTime = new Date();
+            var nowTime = ((currentTime - startTime) / 1000);
+            var value = Math.tween.Linear(nowTime, startPos, change, duringTime);
+            if (nowTime <= duringTime) {
+                obj.style[attr] = value + 'px';
+            } else {
+                clearInterval(obj.timer);
+                obj.style[attr] = target + 'px';
+                if (fnEnd) {
+                    fnEnd();
+                }
+            }
+
+            // console.log(nowTime, startPos, change, duringTime, value, obj.timer);
+        }, 3)
+    }
+
+    /* var clickStop = {};
+    clickStop.boolean = true;
+ var timer = 0;
+
+    odiv.addEventListener('click', function moves() {
+        clickStop.startTime = clickStop.startTime || new Date();
+        var curTime = new Date();
+        var nowTime = curTime - clickStop.startTime;
+        // clickStop.startTime = curTime;
+        clearInterval(timer);
+        if (clickStop.boolean) {  
+            move(odiv, 300, 'height', 2, function () {
+                move(odiv, 300, 'width', 2, function () {
+                    move(odiv, 150, 'left', 2, function () {
+                        move(odiv, 150, 'height', 2, function () {
+                            move(odiv, 300, 'top', 1);
+                        });
+                    });
+                });
+            });
+        }
+        // timer = setTimeout(function(){
+        //     console.log(1);
+        // },9000)
+        // console.log(2);
+        if (nowTime <= 9*1000 ) {
+                clickStop.boolean = false;
+            }else{
+                clickStop.boolean = true;
+                clickStop.startTime = curTime;
+            }
+        console.log(clickStop.boolean,nowTime,clickStop.startTime);
+
+    }) */
+    // odiv.removeEventListener('click',moves);
+
+    function addClickEvents(obj, event, fn, time) {
+        var stop = {};
+        stop.boolean = true;
+        obj.addEventListener(event, function () {
+            stop.startTime = stop.startTime || new Date();
+            var currentTime = new Date();
+            var nowTime = currentTime - stop.startTime;
+            if (stop.boolean) {
+                fn();
+            }
+
+            if (nowTime <= time * 1000) {
+                stop.boolean = false;
+            } else {
+                stop.boolean = true;
+                stop.startTime = currentTime;
+                // 运行完一次后,更新开始的时间
+            }
+        })
+    }
+
+    addClickEvents(odiv, 'click', function () {
+        move(odiv, 300, 'height', 2, function () {
+            move(odiv, 300, 'width', 2, function () {
+                move(odiv, 150, 'left', 2, function () {
+                    move(odiv, 150, 'height', 2, function () {
+                        move(odiv, 300, 'top', 1);
+                    });
+                });
+            });
+        });
+    }, 9);
+</script>
+
+</html>

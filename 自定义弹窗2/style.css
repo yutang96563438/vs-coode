@@ -1,0 +1,77 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#btn{
+    padding: 1em 2em;
+    text-align: center;
+    border: 0;
+    background-color: chocolate;
+    color: #fff;
+    cursor: pointer;
+}
+#btn:hover{
+    color: #333;
+}
+
+.win{
+    width: 15%;
+    height: 300px;
+    border: 1px solid #000;
+    background-color: #fff;
+    position: fixed;
+    left: 5px;
+    bottom: -300px;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* transition: all 3s ease 1s;  */
+}
+
+.win .win-header{
+    background-color: #e25948;
+    text-align: center;
+    position: relative;
+}
+
+.win .win-header span{
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 30px;
+    margin: 0 3px 0 0;
+    cursor: pointer;
+}
+
+.win .win-header span:hover{
+    color: antiquewhite;
+}
+
+.win .win-header h1{
+    padding: 5px;
+}
+
+.win .win-body{
+    text-indent: 2em;
+    padding: 5px;
+    line-height: 1em;
+    font-size: 14px;
+    width: 97.88%;
+    height: 71%;
+    background-color: bisque
+}
+
+.win .win-body p{
+    overflow: auto;  
+    width: 100%;
+    height: 100%;  
+}
+
+.win .win-footer{
+    /* position: relative; */
+    /* bottom: -62px; */
+    text-align: center;
+    background-color: #e25948; 
+}

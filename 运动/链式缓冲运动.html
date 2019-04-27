@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>链式缓冲运动</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            width: 500px;
+            height: 100px;
+            border: 1px solid #000;
+            position: relative;
+            margin: 100px auto;
+        }
+
+        li {
+            width: 50px;
+            height: 30px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            /*bottom: 0;
+            right: 0; */
+        }
+
+        li:nth-child(1) {
+            /* top: 0; */
+            background-color: rgb(185, 32, 32);
+        }
+
+        li:nth-child(2) {
+            top: 35px;
+            background-color: rgb(19, 197, 43);
+        }
+
+        li:nth-child(3) {
+            top: 70px;
+            background-color: rgb(38, 22, 185);
+            /* opacity: 1; */
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="box">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+<script>
+    var ul = document.getElementsByTagName('ul')[0],
+        li = ul.getElementsByTagName('li');
+
+    function getStyle(obj, arrt) {
+        return getComputedStyle(obj, true)[arrt];
+    }
+
+    function shakeMove(json) {
+        var obj = json.obj;
+        var target = json.target;
+        target = Number(target) || 20;
+        var attr = json.attr;
+        attr = attr || 'left';
+        var dir = json.dir;
+        dir = Number(dir) || 1;
+        var stepValue = json.stepValue;
+        stepValue = Number(stepValue) || 2;
+        var step = 0;
+        var value;
+        var attrValue = parseFloat(getStyle(obj, attr));
+        if (obj.timer) {
+            return;
+        }
+        obj.timer = setInterval(function () {
+            value = dir * (target - step);
+            obj.style[attr] = attrValue + value + 'px';
+            if (dir == -1) {
+                step += stepValue;
+            }
+            if (target <= step) {
+                clearInterval(obj.timer);
+                obj.style[attr] = attrValue + 'px';
+                obj.timer = 0;
+            }
+            console.log(step);
+            dir = -dir;
+        }, 50)
+    }
+
+    function cushionMotion(obj, arrt, target, fnEnd) {
+        clearInterval(obj.timer);
+        var curPos = null;
+        var speed = null;
+        obj.timer = setInterval(function () {
+
+
+            if (arrt == 'opacity') {
+                curPos = Math.round(parseFloat(getStyle(obj, arrt)) * 100); //四舍五入,去掉小数
+            } else {
+                curPos = parseInt(getStyle(obj, arrt));
+            }
+            speed = (target - curPos) / 7;
+            speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+
+
+            if (Math.abs(target) == Math.abs(parseInt(curPos))) {
+                clearInterval(obj.timer);
+                if (fnEnd) {
+                    obj.timer = 0;
+                    fnEnd();
+                }
+            } else {
+                if (arrt == 'opacity') {
+                    obj.style[arrt] = (curPos + speed) / 100;
+                    // console.log((curPos + speed) / 100, speed);
+                } else {
+                    obj.style[arrt] = curPos + speed + 'px';
+                }
+
+            }
+
+        }, 30)
+    }
+
+    li[2].addEventListener('mouseover', function () {
+        cushionMotion(li[2], 'opacity', 30, function () {
+            cushionMotion(li[2], 'width', 100, function () {
+                cushionMotion(li[2], 'height', 60, function () {
+                    cushionMotion(li[2], 'left', -li[2].offsetWidth);
+                })
+            })
+        });
+    })
+    li[2].addEventListener('mouseleave', function () {
+        cushionMotion(li[2], 'opacity', 100, function () {
+            cushionMotion(li[2], 'width', 50, function () {
+                cushionMotion(li[2], 'height', 30, function () {
+                    cushionMotion(li[2], 'left', 501, function () {
+                        shakeMove({
+                            obj: li[2],
+                            target: 20,
+                            stepValue: 2
+                        })
+                    });
+                })
+            })
+        });
+    })
+    li[1].addEventListener('mouseover', function () {
+        // cushionMotion(li[1], 'opacity', 30);
+        shakeMove({
+            obj: li[1],
+            target: 20,
+            stepValue: 2
+        });
+    })
+    li[1].addEventListener('mouseleave', function () {
+        cushionMotion(li[1], 'opacity', 100);
+    })
+
+    /*   ul.addEventListener('click', function () {
+          cushionMotion(li[0], 'top', 150);
+          cushionMotion(li[1], 'width', 501);
+          cushionMotion(li[2], 'opacity', 30);
+      })
+      li[2].addEventListener('mouseover', function () {
+          cushionMotion(li[2], 'opacity', 30);
+      })
+      li[2].addEventListener('mouseleave', function () {
+          cushionMotion(li[2], 'opacity', 100);
+      }) */
+</script>
+
+</html>

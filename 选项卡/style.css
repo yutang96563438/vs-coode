@@ -1,0 +1,33 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.wrapper {
+  position: relative;
+  left: 25%;
+  top: 200px;
+}
+
+button {
+  position: absolute;
+  width: 150px;
+  height: 30px;
+  color: #fff;
+  padding: 1em 2em;
+  background-color: #333;
+  text-align: center;
+  line-height: 5px;
+}
+
+/* button:hover{
+
+} */
+
+.wrapper div {
+  width: 51.1%;
+  height: 150px;
+  border: 1px solid #000;
+  position: absolute;
+  display:none;	
+}

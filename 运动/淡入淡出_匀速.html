@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>匀速运动2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            width: 500px;
+            height: 100px;
+            border: 1px solid #000;
+            position: relative;
+            margin: 100px auto;
+        }
+
+        li {
+            width: 50px;
+            height: 30px;
+            position: absolute;
+             left: 0;
+            /*bottom: 0;
+            right: 0; */
+        }
+
+        li:nth-child(1) {
+            /* top: 0; */
+            background-color: rgb(185, 32, 32);
+        }
+
+        li:nth-child(2) {
+            top: 35px;
+            background-color: rgb(19, 197, 43);
+        }
+
+        li:nth-child(3) {
+            top: 70px;
+            background-color: rgb(38, 22, 185);
+            /* opacity: 1; */
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="box">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+<script>
+    var ul = document.getElementsByTagName('ul')[0],
+        li = ul.getElementsByTagName('li');
+
+    function getStyle(obj, arrt) {
+        return getComputedStyle(obj, false)[arrt];
+    }
+
+    function uniformMotion(obj, target, arrt) {
+
+        clearInterval(obj.timer);
+
+        obj.timer = setInterval(function () {
+            var curPos = parseFloat(getStyle(obj, arrt));
+            // var opacity = Number(getStyle(obj, arrt));
+            console.log(curPos)
+            var speed = 10;
+            if (target > curPos) {
+                speed = speed;
+            } else {
+                speed = -speed;
+            }
+            if (arrt == 'opacity') {
+                if (target == curPos) {
+                    clearInterval(obj.timer);
+                    obj.style[arrt] = target;
+                } else {
+                    curPos += speed / 100;
+                    obj.style[arrt] = curPos;
+                }
+            } else {
+                curPos = parseInt(curPos);
+                if (Math.abs(curPos - target) <= Math.abs(speed)) {
+                    clearInterval(obj.timer);
+                    obj.style[arrt] = target + 'px'; //..确保obj一定运动到目标点.
+                } else {
+                    obj.style[arrt] = curPos + speed + 'px';
+
+                }
+            }
+        }, 30)
+    }
+    var liWith = li[1].offsetWidth
+    ul.addEventListener('click', function () {
+        uniformMotion(li[0], 100, 'left');
+        /*  uniformMotion(li[1], 501 - liWith, 'width');
+         uniformMotion(li[2], 0.1, 'opacity'); */
+    })
+
+    li[2].addEventListener('mouseover', function () {
+        uniformMotion(li[2], 0.1, 'opacity');
+    })
+    li[2].addEventListener('mouseleave', function () {
+        uniformMotion(li[2], .5, 'opacity');
+    })
+
+    li[1].addEventListener('mouseover', function () {
+        uniformMotion(li[1], 40, 'width');
+    })
+    li[1].addEventListener('mouseleave', function () {
+        uniformMotion(li[1], 501, 'width');
+    })
+
+    li[0].addEventListener('mouseover', function () {
+        uniformMotion(li[0], 200, 'left');
+    })
+    li[0].addEventListener('mouseleave', function () {
+        uniformMotion(li[0], 0, 'left');
+    })
+</script>
+
+</html>

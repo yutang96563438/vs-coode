@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>part 1</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    canvas {
+      display: block;
+      /* margin: 50px auto 0 auto; */
+    }
+  </style>
+</head>
+
+<body>
+  <canvas></canvas>
+</body>
+<script>
+  var canvas = document.getElementsByTagName("canvas")[0],
+    ctx = canvas.getContext("2d");
+  canvas.width = canvas.height = window.innerWidth;
+
+  var amplitude = 50,
+    period = 2;
+  var t = 0;
+  var t2 = 1;
+
+  function draw() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 1;
+    for (var x = 0; x <= canvas.width; x++) {
+      var y = amplitude * Math.sin((2 * x * Math.PI) / 180 + t) + 150 + t2;
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+    t++;
+    t = t > 30 ? 0 : t;
+    // t2+=5;
+    requestAnimationFrame(draw);
+  }
+  draw();
+  // var timer = setInterval(draw, 200);
+</script>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>3</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* canvas{
+    } */
+  </style>
+</head>
+
+<body>
+  <canvas></canvas>
+</body>
+<script>
+  var canvas = document.getElementsByTagName("canvas")[0],
+    ctx = canvas.getContext("2d"),
+    sw = (canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth),
+    sh = (canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight);
+  window.onresize = function () {
+    sw = canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    sh = canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    window.cancelAnimationFrame(stopAnimationID);
+    draw();
+  };
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function Particle() {}
+
+  Particle.prototype = {
+    init: function () {
+      this.sx = random(6, sw - 6);
+      this.sy = random(6, sh - 6);
+      this.x = this.sx;
+      this.y = this.sy;
+      this.r = random(1, 5);
+      this.ax = random(0, 1.5) / 5;
+      this.ay = random(0, 1.5) / 5;
+      this.vax = random(0.8, 1.2);
+      this.vay = random(0.8, 1.2);
+      this.range = random(10, 25);
+      this.rangeCoordinate = {
+        minX: this.x - this.range,
+        maxX: this.x + this.range,
+        minY: this.y - this.range,
+        maxY: this.y + this.range
+      };
+      this.count = 0;
+      this.countRange = parseInt(random(10, 15));
+    },
+    updata: function () {
+      this.x += this.ax;
+      this.y += this.ay;
+
+      this.ax *= this.x > this.rangeCoordinate.maxX || this.x < this.rangeCoordinate.minX ? -1 : 1;
+      this.ay *= this.y > this.rangeCoordinate.maxY || this.y < this.rangeCoordinate.minY ? -1 : 1;
+
+      // this.ax *= this.vax;
+      // this.ay *= this.vay;
+    },
+    draw: function () {
+      ctx.beginPath();
+      ctx.fillStyle = "#EDEDED";
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+      ctx.closePath();
+      ctx.fill();
+      console.log(1);
+    }
+  };
+
+  function draw(count) {
+    var particles = [];
+    var count = count || 1000;
+    for (var i = 0; i < count; i++) {
+      var particle = new Particle();
+      particle.init();
+      particles.push(particle);
+    }
+    var gradient = ctx.createLinearGradient(0, 0, sw, sh);
+    gradient.addColorStop(0, "#B9D3EE");
+    gradient.addColorStop(1, "#ADD8E6");
+
+    (function animation() {
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, sw, sh);
+      for (var i = 0, len = particles.length; i < len; i++) {
+        particles[i].draw();
+        particles[i].updata();
+      }
+      stopAnimationID = requestAnimationFrame(animation);
+    })()
+    // animation();
+  }
+
+  var stopAnimationID = 0;
+  draw();
+</script>
+
+</html>

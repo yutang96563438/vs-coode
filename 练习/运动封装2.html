@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>运动封装</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul {
+            position: relative;
+            border: 1px solid black;
+            margin: 50px auto;
+            width: 500px;
+            height: 300px;
+        }
+
+        li {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 30px;
+        }
+
+        li:nth-child(1) {
+            background-color: rgb(156, 48, 48);
+        }
+
+        li:nth-child(2) {
+            background-color: rgb(39, 189, 84);
+            top: 35px;
+            font-size: 10px;
+        }
+
+        li:nth-child(3) {
+            background-color: blue;
+            top: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li class="li1">hello</li>
+        <li class="li2">World</li>
+        <li class="li3"></li>
+    </ul>
+</body>
+<script src="moveAlgorithm.js"></script>
+<script>
+    var oUl = document.getElementsByTagName('ul')[0],
+        oLi = oUl.getElementsByTagName('li');
+
+
+    function move(obj, json, duringTime, fnType, fnEnd) {
+        obj.timer = obj.timer || 0;
+
+        var startTime = new Date();
+        var startValue = null;
+        clearInterval(obj.timer);
+        obj.startValue = {};
+        for (let key in json) {
+            obj.startValue[key] = parseFloat(getStyle(obj, key));
+            // console.log(obj.startValue[key],json);
+        }
+        obj.timer = setInterval(function () {
+
+            for (let key in json) {
+
+                var changeValue = json[key] - obj.startValue[key],
+                    curTime = new Date(),
+                    nowTime = (curTime - startTime) / 1000,
+                    value = fnType(nowTime, obj.startValue[key], changeValue, duringTime);
+                if (nowTime <= duringTime) {
+                    if (key == 'opacity') {
+                        obj.style[key] = value;
+                    } else {
+                        obj.style[key] = value + 'px';
+                    }
+                } else {
+                    clearInterval(obj.timer);
+                    if (key == 'opacity') {
+                        obj.style[key] = json[key];
+                    } else {
+                        obj.style[key] = json[key] + 'px';
+                    }
+                    if (fnEnd) {
+                        fnEnd();
+                    }
+                }
+                console.log(key, obj.startValue[key], nowTime);
+            }
+        }, 0);
+    }
+
+
+    oUl.addEventListener('click', function (e) {
+        var target = e.srcElement || e.target;
+        console.log(target);
+        if (target.nodeName != 'UL') {
+            if (target.className == 'li1') {
+                move(target, {
+                    'width': 300
+                }, 3, Math.movement.Bounce.easeIn, function () {
+                    move(target, {
+                        'height': 150
+                    }, 2, Math.movement.Sine.easeIn, function () {
+                        move(target, {
+                            'left': 501
+                        }, 3, Math.movement.Elastic.easeOut, function () {
+                            move(target, {
+                                'opacity': .5
+                            }, 1, Math.movement.Cubic.easeIn);
+                        });
+                    });
+                });
+            } else if (target.className == 'li2') {
+                move(target, {
+                    'width': 100,
+                    'height': 150,
+                    'top': 500,
+                    'opacity': 0.5,
+                    'font-size':50
+                }, 8, Math.movement.Elastic.easeOut);
+            } else if (target.className == 'li3') {
+                move(target, {
+                    'width': 300,
+                    'height': 150
+                }, 3, Math.movement.Elastic.easeInOut, function () {
+                    move(target, {'left':-100}, 3, Math.movement.Elastic.easeOut, function () {
+                        move(target, {'opacity':.5}, 1, Math.movement.Linear);
+                    });
+                });
+            }
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>圆球进度条</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+            background-color: #333;
+            margin: 50px auto 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        w = 500,
+        h = 500,
+        scaleW = w / window.innerWidth,
+        scaleH = h / window.innerHeight;
+
+    canvas.width = w;
+    canvas.height = h;
+    //当窗口改变时,canvas根据比例变化.
+    window.onresize = function () {
+        w = window.innerWidth * scaleW;
+        h = window.innerHeight * scaleH;
+        canvas.width = w;
+        canvas.height = h;
+        console.log(scaleW, scaleH);
+    }
+
+    function CircularProgressBar() {}
+
+    CircularProgressBar.prototype = {
+        init: function (speed, amplidute, offsetY, circle, period) {
+            //定义圆
+            this.circle = circle || {
+                r: 150,
+                x: w / 2,
+                y: h / 2
+            };
+            //计算包围矩形的4个点.
+            this.coordinate = {
+                lt: [(w - 2 * this.circle.r) / 2 - 10, (h - 2 * this.circle.r) / 2],
+                lb: [(w - 2 * this.circle.r) / 2 - 10, (h - 2 * this.circle.r) / 2 + 2 * this.circle.r],
+                rb: [(w - 2 * this.circle.r) / 2 + 2 * this.circle.r + 10, (h - 2 * this.circle.r) / 2 + 2 *
+                    this.circle.r
+                ],
+                rt: [(w - 2 * this.circle.r) / 2 + 2 * this.circle.r + 10, (h - 2 * this.circle.r) / 2]
+            }
+
+
+            this.amplidute = amplidute || 10; //振幅,决定波浪的高低.
+            this.phase = speed / 15 || 1; //速度,决定波浪晃动的快慢
+
+            offsetY = offsetY >= 100 ? 100 : offsetY;
+            offsetY = offsetY <= 0 ? 0 : offsetY;
+            this.percent = offsetY / 100; //百分比
+
+            this.offsetY = h - (2 * this.circle.r * this.percent + this.coordinate.lt[1]) || 0;
+            this.period = period || 2;
+            this.coefficientX = 2 * Math.PI / (w + 300 / this.period); //x的系数,决定波浪的密集程度.越大越密集
+
+
+            console.log(this.percent, this.coordinate, this.offsetY);
+        },
+        draw: function () {
+            ctx.save()
+            ctx.beginPath();
+            ctx.strokeStyle = '#00ff00';
+            ctx.arc(this.circle.x, this.circle.y, this.circle.r, 0, 2 * Math.PI, false);
+            ctx.stroke();
+            ctx.clip(); //使用这个函数必须与save()和restore()连用.
+
+            ctx.beginPath();
+            ctx.fillStyle = getColor(this.percent);
+            ctx.moveTo(this.coordinate.lt[0], this.coordinate.lt[1]);
+            ctx.lineTo(this.coordinate.lb[0], this.coordinate.lb[1]);
+            ctx.lineTo(this.coordinate.rb[0], this.coordinate.rb[1]);
+            ctx.lineTo(this.coordinate.rt[0], this.coordinate.rt[1]);
+            //画波浪.根据公式: y = A*sin(ω*x+φ)+b
+            for (var x = this.coordinate.rt[0]; x > this.coordinate.lt[0]; x--) {
+                var y = this.amplidute * Math.sin(this.coefficientX * x + this.phase) + this.offsetY;
+                ctx.lineTo(x, y);
+            }
+            ctx.fill();
+            ctx.beginPath();
+            ctx.fillStyle = 'red';
+            ctx.font = '30px Arial';
+            ctx.fillText((this.percent * 100).toFixed(2) + '%', this.circle.x - 30, this.circle.y + 15);
+            ctx.restore();
+        }
+    }
+
+    function getColor(percent) {
+        percent *= 100;
+        if (percent < 20) {
+            return 'rgba(0, 139, 0,0.5)';
+        } else if (percent >= 20 && percent < 40) {
+            return 'rgba(0, 205, 0,0.5)';
+        } else if (percent >= 40 && percent < 60) {
+            return 'rgba(0, 238, 0,0.5)';
+        } else if (percent >= 60 && percent < 80) {
+            return 'rgba(0, 255, 0,0.5)';
+        } else {
+            return 'rgba(0, 255, 0,0.8)'
+        }
+    }
+
+
+
+
+    function draw() {
+        var bar = new CircularProgressBar();
+        var bar2 = new CircularProgressBar();
+        var phase = 0;
+        var offsetY = 0;
+
+
+
+        function circulate() {
+            ctx.fillStyle = '#fff'
+            ctx.fillRect(0, 0, w, h);
+            bar.init(phase + 8 * Math.PI, 8, offsetY);
+            bar.draw();
+            bar2.init(phase, 20, offsetY);
+            bar2.draw();
+            requestAnimationFrame(circulate);
+            phase++;
+            offsetY += 0.1;
+            if (offsetY >= 100) {
+                setTimeout(function () {
+                    offsetY = 0;
+                    phase = 0;
+                }, 1000);
+            }
+        }
+        circulate();
+    }
+    draw();
+</script>
+
+</html>

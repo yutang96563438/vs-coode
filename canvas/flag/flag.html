@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>旗帜飘动效果 canvas实在</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            display: block;
+            background-color: lightgoldenrodyellow;
+            margin: 50px auto 0 auto;
+            transform: scale(2);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        IM_width, IM_height;
+    var imge = new Image();
+    imge.src = '../flag/logo.jpg';
+
+
+    var amplitude = 30, //振 幅
+        period = 2, //周期数.
+        frequency = 1, //频率
+        v, //波速
+        wavelength, //波长.
+        coefficientX, //x的系数
+        coefficientA; //振幅的系数.
+
+    imge.onload = function () {
+        IM_height = Math.floor(imge.height);
+        IM_width = Math.floor(imge.width);
+        canvas.width = IM_width;
+        canvas.height = IM_height + 2 * amplitude;
+
+        // ctx.drawImage(imge, 0, 30);
+
+        wavelength = IM_width / period;
+        coefficientX = 2 * Math.PI / wavelength;
+        v = wavelength * frequency;
+        coefficientA = amplitude / IM_width;
+
+        // draw();
+
+    }
+    var t = 0;
+    setInterval(draw, 100);
+    function draw() {
+        ctx.fillStyle = 'lightgoldenrodyellow';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (var x = 0; x < IM_width - 20; x++) {
+            var y = coefficientA * x * Math.sin(coefficientX * x + t) + amplitude;
+            ctx.drawImage(imge, x, 30, 1, IM_height, x, 30 + y, 1, IM_height);
+        }
+        t++;
+        t = t > 40 ? 0 : t;
+        // requestAnimationFrame(draw);
+    }
+    // draw() 
+</script>
+
+</html>

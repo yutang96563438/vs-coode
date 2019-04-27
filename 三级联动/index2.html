@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>三级联动2</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: aliceblue;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .content {
+            width: 300px;
+            margin: 50px auto;
+        }
+
+        .row {
+            width: 100%;
+            height: 42px;
+            background-color: #ffffff;
+            border-radius: 14px;
+            margin-top: 10px;
+        }
+
+        .lable {
+            color: #03a9f4;
+            display: inline-block;
+            text-align: center;
+            line-height: 40px;
+            padding: 0 10px;
+        }
+
+        .lable::after {
+            content: '|';
+            display: inline-block;
+            padding-left: 15px;
+            color: #cccccc;
+            font-weight: 500;
+        }
+
+        .con-sel {
+            display: inline-block;
+            width: 210px;
+            height: 100%;
+            color: #3a3838;
+        }
+
+        select {
+            width: 100%;
+            height: 70%;
+            border-color: aliceblue;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="content">
+        <li class="row">
+            <p class="lable">省 会</p>
+            <div class="con-sel">
+                <select name="province" id="province"></select>
+            </div>
+        </li>
+        <li class="row">
+            <p class="lable">城 市</p>
+            <div class="con-sel">
+                <select name="city" id="city"></select>
+            </div>
+        </li>
+        <li class="row">
+            <p class="lable">学 校</p>
+            <div class="con-sel">
+                <select name="school" id="school"></select>
+            </div>
+        </li>
+    </ul>
+</body>
+<script src="../三级联动/AllSchool.js"></script>
+<script>
+    var provinceNode = document.getElementsByName('province')[0],
+        cityNode = document.getElementsByName('city')[0],
+        schoolNode = document.getElementsByName('school')[0];
+
+    function initial() {
+        var provinceStr = '',
+            provinceOption = []; //provinceNode.option 可以获取value值 .
+        for (var i = 0, len = province.length; i < len; i++) {
+            provinceStr += '<option value = ' + province[i][0] + '>' + province[i][1] + '</option>';
+        }
+
+        provinceNode.innerHTML += provinceStr;
+        provinceOption = provinceNode.options; //求select下所有option;得到的是一个集合.
+        var currentProvinceValue = provinceOption[provinceNode.selectedIndex].value; //provinceOption[0]就是第一个option.这里求的是当前option的值.
+        console.log(currentProvinceValue);
+
+        var cityStr = '',
+            currentCityValue = null;
+        for (var i = 0, len = city[currentProvinceValue].length; i < len; i++) {
+            cityStr += '<option value=' + city[currentProvinceValue][i][0] + '>' + city[currentProvinceValue][i][1] +
+                '</option>'
+        }
+        cityStr += '<option value = 9999>其他</option>';
+        cityNode.innerHTML += cityStr;
+
+        currentCityValue = cityNode.options[cityNode.selectedIndex].value;
+        var schoolStr = '',
+            schoolArray = allschool[currentCityValue];
+        for (var i = 0, len = schoolArray.length; i < len; i++) {
+            schoolStr += '<option value = ' + schoolArray[i][0] + '>' + schoolArray[i][2] + '</option>';
+        }
+        schoolStr += '<option value=9999>其他</option>';
+        schoolNode.innerHTML += schoolStr;
+    };
+    initial();
+    events();
+    function events() {
+        provinceNode.addEventListener('change', function () {
+            var cityStr = '',
+                currentProvinceValue = provinceNode.options[provinceNode.selectedIndex].value,
+                cityArray = city[currentProvinceValue];
+
+            for (var i = 0, len = cityArray.length; i < len; i++) {
+                cityStr += '<option value = ' + cityArray[i][0] + '>' + cityArray[i][1] + '</option>';
+            }
+            cityStr += '<option value=9999>其他</option>';
+            console.log(cityStr);
+            cityNode.innerHTML = cityStr;
+            schoolChange();
+
+        })
+        cityNode.addEventListener('change', schoolChange);
+
+        function schoolChange() {
+            var schoolStr = '',
+                currentCityValue = cityNode.options[cityNode.selectedIndex].value,
+                schoolArray = allschool[currentCityValue];
+            if (schoolArray) {
+                for (var i = 0, len = schoolArray.length; i < len; i++) {
+                    schoolStr += '<option value = ' + schoolArray[i][0] + '>' +
+                        schoolArray[i][2] + '</option>';
+                }
+            }
+            schoolStr += '<option value=9999>其他</option>';
+            schoolNode.innerHTML = schoolStr;
+        }
+    }
+</script>
+
+</html>

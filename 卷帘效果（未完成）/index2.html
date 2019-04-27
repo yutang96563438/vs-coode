@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>卷帘效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        dl {
+            width: 300px;
+            height: 360px;
+            position: relative;
+            margin: 50px auto;
+            border: 1px dashed #000000;
+        }
+
+        dt {
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform-origin: top;
+            transform-style: preserve-3d;
+            animation: dtMove 1s ease-in-out var(--dtDelay) alternate infinite;
+            background-color: #ff8000;
+            border: #ffffff solid 2px;
+        }
+
+        @keyframes dtMove{
+            0%{
+                transform: rotateX(30deg);
+            }
+            50%{
+                transform: rotateX(-30deg);
+            }
+            100%{
+                transform: rotateX(30deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <dl></dl>
+</body>
+<script>
+    var dlNode = document.getElementsByTagName('dl')[0],
+        styleNode = document.getElementsByTagName('style')[0],
+        styleStr = '',
+        dlHeight = parseInt(getComputedStyle(dlNode, null).height),
+        sum = 10,
+        dtH = parseInt(dlHeight / sum);
+
+
+    for (var i = 0; i < sum; i++) {
+        var dt = document.createElement('dt');
+        dlNode.appendChild(dt);
+        var str = 'dt:nth-child(' + (i + 1) + ')' + '{height:' + (dlHeight - dtH * (i + 1)) + 'px;}';
+        dt.style.top = dtH*(i+1)+'px';
+        dt.style.setProperty('--dtDelay',i*0.5+'s');
+        styleStr += str;
+    }
+
+    styleNode.innerHTML += styleStr;
+</script>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>闪烁的圆圈</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            background-color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        cw = window.innerWidth,
+        ch = window.innerHeight;
+    canvas.height = ch;
+    canvas.width = cw;
+
+    window.onresize = function () {
+        canvas.height = ch = window.innerHeight;
+        canvas.width = cw = window.innerWidth;
+    }
+
+    function CircleStar() {}
+
+    CircleStar.prototype = {
+        init: function () {
+            this.r = 0.5;
+            this.speed = 1.12;
+            this.maxR = 10;
+            this.count = 5;
+            this.num = 0;
+            this.x = random(10, cw);
+            this.y = random(10, ch - 10);
+            this.color = {
+                hue: random(100, 120),
+                brightness: random(50, 100) + '%'
+            }
+            console.log(ch, cw);
+        },
+        update: function () {
+            this.r *= this.speed;
+            if (this.r >= this.maxR) {
+                this.r = 0.5;
+                if (this.num >= 5) {
+                    this.init();
+                }
+                this.num++;
+                return;
+            }
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.strokeStyle = 'hsl(' + this.color.hue + ',100%,' + this.color.brightness + ')';
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 150;
+            ctx.shadowColor = ctx.strokeStyle;
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+    }
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    var star = new CircleStar();
+    star.init();
+
+    function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, cw, ch);
+        star.draw();
+        star.update();
+        requestAnimationFrame(draw);
+    }
+    draw();
+</script>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>黑客雨效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas class="myCanvas" style="background-color:#111"></canvas>
+</body>
+
+<script>
+    var myCanvas = document.getElementsByTagName('canvas')[0],
+        context = myCanvas.getContext('2d'),
+        screenW = document.documentElement.clientWidth, //window.innerWidth
+        screenH = document.documentElement.clientHeight; //window.innerHeight
+
+    myCanvas.width = screenW;
+    myCanvas.height = screenH;
+
+    var fontSize = 20;
+    var columns = Math.floor(screenW / 16);
+    var dropsY = [];
+
+    for (var i = 0; i < columns; i++) {
+        dropsY.push(0);
+    }
+
+    var str = 'Canvas Javascript';
+
+    function draw() {
+        context.fillStyle = 'rgba(0,0,0,0.05)';
+        context.fillRect(0, 0, screenW, screenH);
+        context.font = '700 ' + fontSize + ' 微软雅黑';
+        context.fillStyle = getColor();
+        for (var i = 0; i < columns; i++) {
+            var index = Math.floor(Math.random() * str.length);
+            var x = i * fontSize;
+            var y = dropsY[i] * fontSize;
+            context.fillText(str[index], x, y);
+            if (y >= screenH && Math.random() > 0.8) {
+                dropsY[i] = 0;
+            }
+            dropsY[i]++;
+        }
+        console.log(dropsY);
+    }
+
+    function getColor() {
+        var r = Math.floor(Math.random() * 225),
+            g = Math.floor(Math.random() * 225),
+            b = Math.floor(Math.random() * 225);
+        return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+
+    // draw();
+    setInterval(draw, 30);
+</script>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            height: 10000px;
+        }
+
+        .box {
+            position: absolute;
+            right: 0;
+            /* top: 50%; */
+            /* margin-top: -90px; */
+            width: 100px;
+            height: 180px;
+            background-color: rgb(218, 41, 41);
+            /* transition: all ease-in-out 1s; */
+            display: none;
+        }
+
+        .box1 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: rgb(14, 194, 89);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+    <div class="box1"></div>
+</body>
+
+<script src="../moveAlgorithm.js"></script>
+<script>
+    var box = document.getElementsByTagName('div')[0],
+        body = document.getElementsByTagName('body')[0];
+
+
+    window.addEventListener('scroll', function (e) {
+        box.style.display = 'block';
+        var scrollTop = document.documentElement.scrollTop; //window.pageYOffset;
+        var boxTop = parseInt((document.documentElement.clientHeight - box.offsetHeight) / 2) + scrollTop;
+        // box.style.top = boxTop + 'px';
+        move(box, {
+            top: boxTop
+        }, .5, Math.movement.Quad.easeInOut);
+
+        console.log(document.documentElement.clientHeight, window.innerHeight, window.pageYOffset, box.offsetHeight,
+            boxTop);
+    })
+</script>
+
+</html>

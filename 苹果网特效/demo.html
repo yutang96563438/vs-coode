@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>苹果网特效</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .page {
+            width: 980px;
+            /* height: 190px; */
+            box-sizing: content-box;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+            margin: 50px auto;
+            background-color: #fff;
+            border-color: #e5e5e5 #dbdbdb #d2d2d2;
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        .box {
+            position: relative;
+            overflow: hidden;
+            width: 820px;
+            height: 158px;
+            margin: auto;
+            /* background-color: rgba(150, 210, 180, .5); */
+        }
+
+        ul {
+            width: 1680px;
+            position: relative;
+        }
+
+        li {
+            position: absolute;
+            width: 140px;
+            height: 152px;
+            top: 0;
+            left: 0;
+            /* transition-delay: 4s; */
+            transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) all .3s;
+        }
+
+        .box:hover li:nth-child(1) {
+            left: 500px;
+        }
+
+        li img {
+            display: block;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="box">
+            <ul>
+                <li>
+                    <img src="img/1.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/2.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/3.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/4.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/5.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/6.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/7.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/8.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/9.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/10.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/11.jpg" alt="">
+                </li>
+                <li>
+                    <img src="img/12.jpg" alt="">
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+<script>
+    var oUl = document.getElementsByTagName('ul')[0],
+        divBox = document.getElementsByTagName('div')[1],
+        oLi = oUl.getElementsByTagName('li');
+
+    for (let i = 0; i < oLi.length; i++) {
+        oLi[i].style.left = i * 140 + 'px';
+    }
+
+    function move1() {
+        let index = 0;
+        var first = 0;
+        var last = oLi.length - 1;
+
+        var timer = setInterval(function () {
+            
+            if (index <= oLi.length / 2 - 1) {
+                oLi[index].style.left = -140*last + 'px';
+                last--;
+            } else {
+
+                oLi[index].style.left = first * 140 + 'px';
+                first++;
+            }
+            index++;
+            if (index === oLi.length) {
+                clearInterval(timer);
+            }
+        }, 600)
+    }
+
+    function move2() {
+        var last = oLi.length - 1;
+        var first = 0;
+        var index = last;
+
+        var timer = setInterval(function () {
+
+            oLi[index].style.left = 140 * index + 'px';
+            index--;
+            if (index < 0) {
+                clearInterval(timer);
+            }
+        }, 600)
+    }
+
+    var flag = true;
+    divBox.addEventListener('click', function () {
+        if (flag) {
+            move1();
+
+        } else {
+            move2();
+        }
+        flag = !flag;
+        console.log(1);
+    })
+</script>
+
+</html>

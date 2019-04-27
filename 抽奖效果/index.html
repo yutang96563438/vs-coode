@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>抽奖效果</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .box {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            margin: 50px auto 0;
+            border: 1px dashed black;
+        }
+
+        ul {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            /* display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: 100px 100px 100px;这是栅格布局*/
+        }
+
+        li {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            border: 1px solid #bee6fd;
+            box-sizing: border-box;
+        }
+
+        li:nth-child(1) {
+            left: 0;
+            top: 0;
+        }
+
+        li:nth-child(2) {
+            left: 100px;
+            top: 0;
+        }
+
+        li:nth-child(3) {
+            left: 200px;
+            top: 0;
+        }
+
+        li:nth-child(4) {
+            left: 300px;
+            top: 0px;
+        }
+
+        li:nth-child(5) {
+            left: 300px;
+            top: 100px;
+        }
+
+        li:nth-child(6) {
+            left: 300px;
+            top: 200px;
+        }
+
+        li:nth-child(7) {
+            left: 300px;
+            top: 300px;
+        }
+
+        li:nth-child(8) {
+            left: 200px;
+            top: 300px;
+        }
+
+        li:nth-child(9) {
+            left: 100px;
+            top: 300px;
+        }
+
+        li:nth-child(10) {
+            left: 0px;
+            top: 300px;
+        }
+
+        li:nth-child(11) {
+            left: 0px;
+            top: 200px;
+        }
+
+        li:nth-child(12) {
+            left: 0px;
+            top: 100px;
+        }
+
+
+        .borderBox {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <div class="button"></div>
+    </div>
+</body>
+<script>
+    var ul = document.getElementsByTagName('ul')[0],
+        liNodes = ul.children,
+        arr_lenght = liNodes.length,
+        speed = 300,
+        timer = 0,
+        index = 0,
+        cylinder = 0,
+        cylinderEnd = 3,
+        firstIndex = index,
+        flag = false,
+        quik = 0,
+        endIndex = 0;
+
+    // starGame();
+
+    ul.addEventListener('click',starGame);
+
+    function starGame() {
+        var borderBox = document.getElementsByClassName('borderBox')[0];
+        if(borderBox){
+            borderBox.className = '';
+        }
+        console.log(borderBox);
+        endIndex = Math.floor(Math.random() * 13);
+        index = 0;
+
+        timer = setInterval(star, speed);
+    }
+
+    function star() {
+        if (flag == false) {
+            if (quik == 5) {
+                clearInterval(timer);
+                speed = 50;
+                timer = setInterval(star, speed);
+            }
+            if (cylinder == cylinderEnd + 1 && index - 1 == endIndex) {
+                clearInterval(timer);
+                speed = 300;
+                timer = setInterval(star, speed);
+                flag = true;
+            }
+        }
+
+        if (index >= arr_lenght) {
+            liNodes[index - 1].className = '';
+            index = firstIndex;
+            cylinder++;
+        }
+        liNodes[index].className = 'borderBox';
+        if (index > firstIndex) {
+            liNodes[index - 1].className = '';
+        }
+        index++;
+        quik++;
+        if (flag == true && index - 1 == endIndex) {
+            quik = 0;
+            cylinder = 0;
+            flag = false;
+            clearInterval(timer);
+        }
+
+
+    }
+
+
+    // timer = setInterval(function () {
+    //     if (liNodes[index].className != 'button' && index < _lenght) {
+    //         liNodes[index].className = 'borderBox';
+    //         if(index>0){
+    //             liNodes[index-1].className = '';
+    //         }
+
+    //     }
+    //     if (index >= arr_lenght - 1) {
+    //         clearInterval(timer);
+    //     }
+    //     index++
+    // }, speed)
+</script>
+
+</html>

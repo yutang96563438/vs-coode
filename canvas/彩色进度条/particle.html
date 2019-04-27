@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Particle,粒子飞射</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        canvas {
+            background-color: #353533;
+            position: absolute;
+            left: 30%;
+            top: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+</body>
+
+<script>
+    var canvas = document.getElementsByTagName('canvas')[0],
+        ctx = canvas.getContext('2d'),
+        scaleW = 0.25,
+        w = (window.innerWidth || document.documentElement.clientWidth || body.clientWidth) * scaleW,
+        scaleH = 0.618,
+        h = w * scaleH;
+    canvas.width = w;
+    canvas.height = h;
+
+    window.addEventListener('resize', function () {
+        w = (window.innerWidth || document.documentElement.clientWidth || body.clientWidth) * scaleW;
+        h = w * scaleH;
+        canvas.width = w;
+        canvas.height = h;
+        console.log(w, h);
+    })
+
+
+    var width = 0;
+    var pheight = h / 2;
+
+    function Particle() {}
+    Particle.prototype = {
+        init: function () {
+            this.w = this.h = 2;
+            this.x = width;
+            this.y = pheight;
+            this.vx = random(0.8, 1.8);
+            this.g = random(1, 4);
+            this.down = false;
+            this.hue = 0;
+            this.variationFactor = 0.85;
+        },
+        draw: function () {
+            ctx.beginPath();
+            ctx.fillStyle = 'hsla(' + this.hue + ',100%,40%,1)';
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.closePath();
+        },
+        update: function () {
+            if (width > canvas.width) {
+                width = 0;
+                console.log(width, canvas.width);
+            } else {
+                this.x -= this.vx;
+                this.hue += this.variationFactor;
+                if (this.down == true) {
+                    this.g += 0.1;
+                    this.y += this.g;
+                } else {
+                    if (this.g < 0) {
+                        this.down = true;
+                        this.g += 0.1;
+                        this.y += this.g;
+                    } else {
+                        this.g -= 0.1;
+                        this.y -= this.g;
+                    }
+                }
+            }
+
+        }
+    }
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    (function () {
+        var ps = [];
+        var count = 0;
+        // for (var i = 0; i < 200; i++) {
+        //     var t = new Particle();
+        //     t.init();
+        //     ps.push(t);
+        // }
+        var timer = setInterval(function(){
+            var t = new Particle();
+            t.init();
+            ps.push(t);
+            count++;
+            if(count > 200){
+                clearInterval(timer);
+            }
+        },10)
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            for (var i = 0; i < ps.length; i++) {
+                ps[i].draw();
+                ps[i].update();
+                if (ps[i].y >= h) {
+                    ps.splice(i,1);
+                    var t = new Particle();
+                    t.init();
+                    ps.push(t);
+                    // p[i].init();
+                }
+            }
+            width += 1;
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })();
+</script>
+
+
+</html>

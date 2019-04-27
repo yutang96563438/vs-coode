@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>自定义弹窗</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="mainStyle.css" />
+
+</head>
+
+<body>
+    <button id="modalBtn" class="button">弹窗</button>
+    <div id="simpleModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span id="closeBtn">&times;</span>
+                <h2>弹窗头部</h2>
+            </div>
+            <div class="modal-body">
+                <p>这是弹窗效果</p>
+                <p>
+                    Note : Options to the far right of the chain always have the highest priority. If two options in the chain conflict with
+                    each other, the option on the right will have precedence. For example, the command lorem_nowrap_wrap40
+                    will insert Lorem Ipsum text with a word wrap width of 40 characters and the command lorem_wrap40_nowrap
+                    will insert Lorem Ipsum text with no word wrapping.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <h3>弹窗底部</h3>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="main.js"></script>
+
+</html>

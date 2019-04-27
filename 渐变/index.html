@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>渐变特效</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .one {
+            --mywidth-width: 500px;
+            --myleft-left: -250px;
+            --myheight-height: 200px;
+        }
+
+        button {
+            width: var(--mywidth-width);
+            height: var(--myheight-height);
+            background-color: rgb(236, 90, 90);
+            border: none;
+            outline: none;
+            border-radius: 300px;
+            position: relative;
+            left: 50%;
+            margin-left: var(--myleft-left);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        span {
+            color: white;
+            text-align: center;
+            line-height: var(--myheight-height);
+            font-size: 30px;
+            font-weight: 500;
+        }
+
+        button::before {
+            --height: 0;
+            --width: 0;
+            content: '';
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            width: var(--width);
+            height: var(--height);
+            background: radial-gradient(circle closest-side, rgba(68, 5, 247, 1), transparent);
+            transform: translate(-50%, -50%);
+            transition: width .2s ease, height .2s ease;
+            border: 1px black solid;
+        }
+
+        button:hover::before {
+            --height: 500px;
+            --width: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="one">
+        <button>
+            <span>请把鼠标移到这里</span>
+        </button>
+    </div>
+    <div></div>
+</body>
+<script>
+    var button = document.getElementsByTagName('div')[0];
+    button.addEventListener('mousemove', function (e) {
+        var x = e.pageX - e.target.offsetLeft;
+        var y = e.pageY - e.target.offsetTop;
+        e.target.style.setProperty('--x', x + 'px');
+        e.target.style.setProperty('--y', y + 'px');
+    })
+    console.log('I love you')
+</script>
+
+</html>
