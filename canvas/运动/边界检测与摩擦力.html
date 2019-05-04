@@ -54,13 +54,13 @@
                 .radius);
         }
 
-        ball.vx = random(5, 10);
-        ball.vy = random(5, 10);
+        ball.vx = random(1, 10);
+        ball.vy = random(1, 10);
         ball.angle = Math.atan2(ball.vy, ball.vx);
         ball.speed = distance(ball.vx, ball.vy, 0, 0);
         // console.log(ball.x, ball.y);
     }
-
+    //在边界反弹
     function bounce(ball, ctx, canvasSize) {
         ball.x += ball.vx;
         ball.y += ball.vy;
@@ -73,7 +73,7 @@
         }
         ball.draw();
     }
-
+    //反弹，在一个方向上
     function bounce2(ball, ctx, canvasSize) {
         ball.x += ball.vx;
         ball.y += ball.vy;
@@ -86,8 +86,11 @@
         }
         ball.draw();
     }
-
+    //移动到边界停止
     function deceleratedMotion(ball, ctx, canvasSize) {
+        // 改变ball.speed的取值范围后，会发现小球不会靠到边界就会停止不动。这是因为ball.speed的值太小，
+        // 还没有移动多少就会小于ball.friction的值，最后就会成为零。
+        // speed的值是合速度，由vx和vy决定。
         if (ball.speed > ball.friction) {
             ball.speed -= ball.friction;
         } else {
@@ -119,10 +122,30 @@
         }
         ball.draw();
     }
+    //移出边界后在边界的另一边出现
+    function boundarySurround(ball, ctx, canvasSize) {
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+        // var size = ball.getBounds();
+        if (ball.x + ball.radius < canvasSize.x) {
+            ball.x = canvasSize.x + canvasSize.w + ball.radius;
+        }
+        if (ball.x - ball.radius > canvasSize.x + canvasSize.w) {
+            ball.x = canvasSize.x - ball.radius;
+        }
+        if (ball.y + ball.radius < canvasSize.y) {
+            ball.y = canvasSize.y + canvasSize.h + ball.radius;
+        }
+        if (ball.y - ball.radius > canvasSize.y + canvasSize.h) {
+            ball.y = canvasSize.y - ball.radius;
+        }
+        ball.draw();
+        // console.log(ball.x,ball.y,canvasSize.x,canvasSize.w);
+    }
 
     (function () {
         var balls = [];
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 4; i++) {
             var t = new Ball();
             init(t, canvasSize);
             balls.push(t);
@@ -137,6 +160,7 @@
             bounce(balls[0], ctx, canvasSize);
             bounce2(balls[1], ctx, canvasSize);
             deceleratedMotion(balls[2], ctx, canvasSize);
+            boundarySurround(balls[3], ctx, canvasSize);
             requestAnimationFrame(draw);
         }
         draw();

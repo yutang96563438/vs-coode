@@ -41,7 +41,7 @@ function Ball(x, y, r, ex, ey, color) {
     this.color = color || '#fff';
     this.vx = 0;
     this.vy = 0;
-    this.friction = 0.05;
+    this.friction = 0.01;
     this.angle = 0;
     this.speed = 0;
     this.arguments = arguments;
